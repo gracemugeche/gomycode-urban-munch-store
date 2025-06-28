@@ -1,7 +1,7 @@
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 
 const ProductDetail = () => {
-  const { productId } = useParams();
+//   const { productId } = useParams();
 
   // Mock product (replace with fetched data)
   const product = {
