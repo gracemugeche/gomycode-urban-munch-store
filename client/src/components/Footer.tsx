@@ -44,7 +44,8 @@ const Footer = () => {
   );
 
   return (
-    <footer className="bg-purple-100 text-gray-800 mt-20 rounded-t-3xl shadow-lg">
+    <footer className="bg-gradient-to-tr from-purple-100 via-purple-200 to-purple-300 text-gray-800 mt-20
+     rounded-t-3xl shadow-lg">
       <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
         <div>
           <h2 className="text-2xl font-bold text-purple-700 mb-3">Urban Munch</h2>
@@ -72,7 +73,7 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <div className="text-center text-xs text-purple-900 bg-purple-200 py-4 border-t">
+      <div className="text-center text-xs text-purple-900 bg-purple-100 py-4 border-t border-purple-200">
         &copy; {new Date().getFullYear()} Urban Munch. Crafted with 💜 by Grace.
       </div>
     </footer>
