@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
 
+
 const Footer = () => {
   const exploreLinks = [
     { text: "About Us", to: "/about" },
@@ -10,7 +11,7 @@ const Footer = () => {
   ];
 
   const helpLinks = [
-    { text: "FAQs", to: "/faqs" },
+    { text: "FAQs", to: "/#faqs" },
     { text: "Support", to: "/support" },
     { text: "Delivery Info", to: "/checkout#delivery-info" },
     { text: "Returns", to: "/returns" },

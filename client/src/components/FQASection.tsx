@@ -38,10 +38,6 @@ const faqItems = [
     answer: "We accept cash on delivery, M-Pesa, and card payments via Stripe.",
   },
   {
-    question: "How can I track my order?",
-    answer: "After placing your order, you'll receive a tracking link via SMS or email.",
-  },
-  {
     question: "What if I have an issue with my order?",
     answer: "You can contact our support team through the Contact Us page, and we’ll resolve it quickly.",
   },
