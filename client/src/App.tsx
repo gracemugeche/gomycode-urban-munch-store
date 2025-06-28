@@ -2,7 +2,8 @@
 import { useLocation } from "react-router-dom";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
-// import AppRoutes from "./routes/AppRoutes";
+import AppRoutes from "./routes/AppRoutes";
+
 
 export default function App() {
   const location = useLocation();
@@ -16,7 +17,7 @@ export default function App() {
       {!shouldHideLayout && <Navbar />}
       
       <main className="flex-grow">
-        {/* <AppRoutes /> */}
+        <AppRoutes/>
       </main>
       
       {!shouldHideLayout && <Footer />}
