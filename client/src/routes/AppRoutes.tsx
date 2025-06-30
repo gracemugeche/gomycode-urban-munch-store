@@ -6,7 +6,7 @@ import Checkout from "../pages/Checkout";
 import Meal from "../pages/Meals";
 import Groceries from "../pages/Groceries";
 import Drink from "../pages/Drinks";
-import Signup from "../pages/Signup";
+import Signup from "../pages/SignUp";
 
 const AppRoutes = () => {
   return (
