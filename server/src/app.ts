@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 
 import productRoutes from './routes/productRoutes';
-// import authRoutes from './routes/authRoutes'; // you’ll create this soon
+import authRoutes from './routes/authRoutes'; 
 // import errorHandler from './middlewares/errorHandler'; // optional for now
 
 // Create Express app
@@ -14,7 +14,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/products', productRoutes);
-// app.use('/api/auth', authRoutes); // placeholder route
+app.use('/api/auth', authRoutes); 
 
 // Error handler
 // app.use(errorHandler); // optional
