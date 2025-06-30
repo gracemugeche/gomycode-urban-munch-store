@@ -1,12 +1,5 @@
-// src/utils/generateToken.ts
-
 import jwt from "jsonwebtoken";
 
-/**
- * Generates a JWT token with the given user ID.
- * @param id - The MongoDB _id of the user.
- * @returns A signed JWT token string.
- */
 export const generateToken = (id: string): string => {
   const secret = process.env.JWT_SECRET;
 
