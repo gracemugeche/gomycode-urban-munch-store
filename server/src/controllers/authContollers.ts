@@ -2,9 +2,6 @@ import { Request, Response } from "express";
 import User, { IUser } from "../models/userModels";
 import { generateToken } from "../utils/generateToken";
 
-// @desc    Register a new user
-// @route   POST /api/auth/register
-// @access  Public
 export const registerUser = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
 
@@ -28,9 +25,6 @@ export const registerUser = async (req: Request, res: Response) => {
   }
 };
 
-// @desc    Log in a user
-// @route   POST /api/auth/login
-// @access  Public
 export const loginUser = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
@@ -41,7 +35,6 @@ export const loginUser = async (req: Request, res: Response) => {
       return res.status(401).json({ message: "User not found" });
     }
 
-    // Type assertion to fix _id unknown issue
     const typedUser = user as IUser;
 
     const isMatch = await typedUser.matchPassword(password);
@@ -59,4 +52,22 @@ export const loginUser = async (req: Request, res: Response) => {
     console.error("Login error:", error);
     return res.status(500).json({ message: "Server error during login" });
   }
+};
+
+// @desc    Get current user profile
+// @route   GET /api/auth/me
+// @access  Private
+export const getMe = async (req: Request, res: Response) => {
+  // @ts-ignore — req.user is added by auth middleware
+  const user = req.user;
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  res.status(200).json({
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+  });
 };
