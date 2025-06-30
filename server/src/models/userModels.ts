@@ -1,7 +1,6 @@
 import mongoose, { Schema, Document, Model, Types } from "mongoose";
 import bcrypt from "bcryptjs";
 
-// ✅ Export interface once, here at the top
 export interface IUser extends Document {
   _id: Types.ObjectId;
   name: string;
@@ -32,6 +31,6 @@ userSchema.pre<IUser>("save", async function (next) {
   next();
 });
 
-// ✅ Only export User here
+
 const User: Model<IUser> = mongoose.model<IUser>("User", userSchema);
 export default User;
