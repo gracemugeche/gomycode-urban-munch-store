@@ -2,18 +2,19 @@ import { Request, Response } from "express";
 import User, { IUser } from "../models/userModels";
 import { generateToken } from "../utils/generateToken";
 
-export const registerUser = async (req: Request, res: Response) => {
+export const registerUser = async (req: Request, res: Response): Promise<void> => {
   const { name, email, password } = req.body;
 
   try {
     const existing = await User.findOne({ email });
     if (existing) {
-      return res.status(400).json({ message: "User already exists" });
+      res.status(400).json({ message: "User already exists" });
+      return;
     }
 
     const user = await User.create({ name, email, password });
 
-    return res.status(201).json({
+    res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
@@ -21,28 +22,30 @@ export const registerUser = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error("Registration error:", error);
-    return res.status(500).json({ message: "Server error during registration" });
+    res.status(500).json({ message: "Server error during registration" });
   }
 };
 
-export const loginUser = async (req: Request, res: Response) => {
+export const loginUser = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
 
   try {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(401).json({ message: "User not found" });
+      res.status(401).json({ message: "User not found" });
+      return;
     }
 
     const typedUser = user as IUser;
-
     const isMatch = await typedUser.matchPassword(password);
+
     if (!isMatch) {
-      return res.status(401).json({ message: "Invalid password" });
+      res.status(401).json({ message: "Invalid password" });
+      return;
     }
 
-    return res.status(200).json({
+    res.status(200).json({
       _id: typedUser._id,
       name: typedUser.name,
       email: typedUser.email,
@@ -50,19 +53,17 @@ export const loginUser = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error("Login error:", error);
-    return res.status(500).json({ message: "Server error during login" });
+    res.status(500).json({ message: "Server error during login" });
   }
 };
 
-// @desc    Get current user profile
-// @route   GET /api/auth/me
-// @access  Private
-export const getMe = async (req: Request, res: Response) => {
+export const getMe = async (req: Request, res: Response): Promise<void> => {
   // @ts-ignore — req.user is added by auth middleware
   const user = req.user;
 
   if (!user) {
-    return res.status(404).json({ message: "User not found" });
+    res.status(404).json({ message: "User not found" });
+    return;
   }
 
   res.status(200).json({
