@@ -1,10 +1,12 @@
 import express from 'express';
 import cors from 'cors';
 
+// Route imports
 import productRoutes from './routes/productRoutes';
 import authRoutes from './routes/authRoutes';
 import orderRoutes from './routes/orderRoutes';
-// import errorHandler from './middlewares/errorHandler'; // optional for now
+import cartRoutes from './routes/cartRoutes';
+// import errorHandler from './middlewares/errorHandler'; // Optional
 
 // Create Express app
 const app = express();
@@ -13,12 +15,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Routes
+// Route setup
 app.use('/api/products', productRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/cart', cartRoutes); // ✅ Added cart route
 
-// Error handler
-// app.use(errorHandler); // optional
+// Global error handler (optional)
+// app.use(errorHandler);
 
 export default app;
