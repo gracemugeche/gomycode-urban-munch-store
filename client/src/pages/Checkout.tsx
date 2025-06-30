@@ -1,5 +1,6 @@
 import { useCart } from "../contexts/CartContext";
 import { useState } from "react";
+import DeliverySection from "../components/DeliverySection";
 
 const Checkout = () => {
   const { cartItems, totalPrice } = useCart();
@@ -10,13 +11,18 @@ const Checkout = () => {
       <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* 🧾 Order Summary */}
         <div className="border border-gray-200 rounded-lg shadow-sm p-6">
-          <h2 className="text-2xl font-bold text-purple-900 mb-4">Order Summary</h2>
+          <h2 className="text-2xl font-bold text-purple-900 mb-4">
+            Order Summary
+          </h2>
           {cartItems.length === 0 ? (
             <p>Your cart is empty.</p>
           ) : (
             <ul className="space-y-4">
               {cartItems.map((item) => (
-                <li key={item.id} className="flex justify-between border-b pb-2">
+                <li
+                  key={item.id}
+                  className="flex justify-between border-b pb-2"
+                >
                   <span>
                     {item.name} × {item.quantity}
                   </span>
@@ -28,29 +34,20 @@ const Checkout = () => {
             </ul>
           )}
           <div className="mt-6 text-right font-bold text-lg">
-            Total: <span className="text-purple-800">${totalPrice.toFixed(2)}</span>
+            Total:{" "}
+            <span className="text-purple-800">${totalPrice.toFixed(2)}</span>
           </div>
         </div>
 
         {/* 🚚 Delivery & Payment */}
         <div className="border border-gray-200 rounded-lg shadow-sm p-6">
-          <h2 className="text-2xl font-bold text-purple-900 mb-4">Delivery & Payment</h2>
+          <h2 className="text-2xl font-bold text-purple-900 mb-4">
+            Delivery & Payment
+          </h2>
 
           <form className="space-y-4">
-            <input
-              type="text"
-              placeholder="Full Name"
-              className="w-full p-3 border rounded-md focus:outline-purple-600"
-            />
-            <input
-              type="text"
-              placeholder="Phone Number"
-              className="w-full p-3 border rounded-md focus:outline-purple-600"
-            />
-            <textarea
-              placeholder="Delivery Address (e.g. Estate, House No, Street)"
-              className="w-full p-3 border rounded-md h-24 resize-none focus:outline-purple-600"
-            />
+            {/* 🏠 Delivery Details */}
+            <DeliverySection deliveryFee={4} />
 
             {/* 💳 Payment Options */}
             <div>
@@ -91,8 +88,8 @@ const Checkout = () => {
 
             <button
               type="submit"
-              className="w-full mt-6 bg-purple-700 hover:bg-purple-800 text-white
-               font-semibold py-3 rounded transition"
+              className="w-full mt-6 bg-purple-700 hover:bg-purple-800 text-white 
+              font-semibold py-3 rounded transition"
             >
               Confirm Order
             </button>
