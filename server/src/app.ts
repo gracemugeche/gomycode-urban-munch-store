@@ -1,4 +1,4 @@
-import express from 'express';
+const express = require("express")
 import cors from 'cors';
 
 // Route imports
@@ -20,7 +20,7 @@ app.use(express.json());
 app.use('/api/products', productRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/orders', orderRoutes);
-app.use('/api/cart', cartRoutes); // ✅ Added cart route
+app.use('/api/cart', cartRoutes);
 
 // Global error handler 
 app.use(errorHandler);
