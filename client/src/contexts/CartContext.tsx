@@ -1,38 +1,38 @@
 import { createContext, useContext, useState } from "react";
 import type { ReactNode } from "react";
 
-// 🧾 Type for a single cart item
+//  Type for a single cart item
 export interface CartItem {
-  id: number;
+  id: string;
   name: string;
   price: number;
   quantity: number;
   image: string;
 }
 
-// 🛒 Type for context value
+// Type for context value
 interface CartContextType {
   cartItems: CartItem[];
   addToCart: (item: CartItem) => void;
-  removeFromCart: (id: number) => void;
+  removeFromCart: (id: string) => void;
   clearCart: () => void;
-  increaseQuantity: (id: number) => void;
-  decreaseQuantity: (id: number) => void;
+  increaseQuantity: (id: string) => void;
+  decreaseQuantity: (id: string) => void;
   totalItems: number;
   totalPrice: number;
 }
 
-// 🟣 Create context
+// Create context
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-// ✅ Hook to use context
+// Hook to use context
 export const useCart = () => {
   const context = useContext(CartContext);
   if (!context) throw new Error("useCart must be used within CartProvider");
   return context;
 };
 
-// 🧠 Provider
+// Provider
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
@@ -48,7 +48,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  const removeFromCart = (id: number) => {
+  const removeFromCart = (id: string) => {
     setCartItems((prev) => prev.filter((item) => item.id !== id));
   };
 
@@ -56,7 +56,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setCartItems([]);
   };
 
-  const increaseQuantity = (id: number) => {
+  const increaseQuantity = (id: string) => {
     setCartItems((prev) =>
       prev.map((item) =>
         item.id === id ? { ...item, quantity: item.quantity + 1 } : item
@@ -64,11 +64,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     );
   };
 
-  const decreaseQuantity = (id: number) => {
+  const decreaseQuantity = (id: string) => {
     setCartItems((prev) =>
       prev.map((item) =>
         item.id === id
-          ? { ...item, quantity: Math.max(1, item.quantity - 1) } // Prevent going below 1
+          ? { ...item, quantity: Math.max(1, item.quantity - 1) } 
           : item
       )
     );
