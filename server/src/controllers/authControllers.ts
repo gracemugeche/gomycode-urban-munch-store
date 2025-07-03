@@ -13,13 +13,14 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
       return;
     }
 
-    const user = await User.create({ name, email, password});
+    const user = await User.create({ name, email, password });
 
     res.status(201).json({
       _id: String(user._id),
       name: user.name,
       email: user.email,
-      token: generateToken(String(user._id)),
+      isAdmin: user.isAdmin,
+      token: generateToken(String(user._id), user.isAdmin), // ✅ Pass isAdmin
     });
   } catch (error) {
     console.error("Registration error:", error);
@@ -49,7 +50,8 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
       _id: String(user._id),
       name: user.name,
       email: user.email,
-      token: generateToken(String(user._id)),
+      isAdmin: user.isAdmin,
+      token: generateToken(String(user._id), user.isAdmin), // ✅ Pass isAdmin
     });
   } catch (error) {
     console.error("Login error:", error);
@@ -70,5 +72,6 @@ export const getMe = async (req: Request, res: Response): Promise<void> => {
     _id: String(user._id),
     name: user.name,
     email: user.email,
+    isAdmin: user.isAdmin,
   });
 };
