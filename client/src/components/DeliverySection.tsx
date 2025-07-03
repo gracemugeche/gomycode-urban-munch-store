@@ -1,4 +1,3 @@
-// src/components/DeliverySection.tsx
 import { useState } from "react";
 
 interface Props {
