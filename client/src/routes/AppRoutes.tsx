@@ -7,6 +7,7 @@ import Meal from "../pages/Meals";
 import Groceries from "../pages/Groceries";
 import Drink from "../pages/Drinks";
 import Signup from "../pages/SignUp";
+import AdminDashboard from "../pages/AdminDashboard";
 
 const AppRoutes = () => {
   return (
@@ -19,6 +20,7 @@ const AppRoutes = () => {
       <Route path="/meals" element={<Meal />} />
       <Route path="/groceries" element={<Groceries/>} />
       <Route path="/drinks" element={<Drink/>} />
+      <Route path="/adminDashboard" element={<AdminDashboard/>} />
     </Routes>
   );
 };
