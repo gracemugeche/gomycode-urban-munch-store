@@ -1,96 +1,21 @@
-// src/pages/Drink.tsx
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard";
-
-const drinks = [
-  {
-    id: 1,
-    name: "Tropical Mango Juice",
-    price: 2.99,
-    image: "/drinks/mango-juice.jpg",
-    description: "Refreshing mango juice with real pulp.",
-  },
-  {
-    id: 2,
-    name: "Iced Coffee",
-    price: 3.25,
-    image: "/drinks/iced-coffee.jpg",
-    description: "Chilled coffee brew with a rich, smooth taste.",
-  },
-  {
-    id: 3,
-    name: "Sparkling Water",
-    price: 1.5,
-    image: "/drinks/sparkling-water.jpg",
-    description: "Bubbly and pure mineral water.",
-  },
-  {
-    id: 4,
-    name: "Strawberry Smoothie",
-    price: 3.75,
-    image: "/drinks/strawberry-smoothie.jpg",
-    description: "Creamy strawberry blend with real fruit.",
-  },
-  {
-    id: 5,
-    name: "Energy Boost Drink",
-    price: 2.5,
-    image: "/drinks/energy-drink.jpg",
-    description: "Power-packed energy for your busy days.",
-  },
-  {
-    id: 6,
-    name: "Classic Cola",
-    price: 1.8,
-    image: "/drinks/cola.jpg",
-    description: "Original fizzy cola for every occasion.",
-  },
-  {
-    id: 7,
-    name: "Lemon Iced Tea",
-    price: 2.25,
-    image: "/drinks/iced-tea.jpg",
-    description: "Cool lemon tea brewed to perfection.",
-  },
-  {
-    id: 8,
-    name: "Orange Juice",
-    price: 2.99,
-    image: "/drinks/orange-juice.jpg",
-    description: "Freshly squeezed and packed with vitamin C.",
-  },
-  {
-    id: 9,
-    name: "Chocolate Milkshake",
-    price: 3.5,
-    image: "/drinks/choco-milkshake.jpg",
-    description: "Rich and creamy chocolate goodness.",
-  },
-  {
-    id: 10,
-    name: "Vanilla Protein Shake",
-    price: 4.0,
-    image: "/drinks/protein-shake.jpg",
-    description: "Post-workout drink packed with protein.",
-  },
-  {
-    id: 11,
-    name: "Herbal Green Tea",
-    price: 1.99,
-    image: "/drinks/green-tea.jpg",
-    description: "Light and calming tea infused with herbs.",
-  },
-  {
-    id: 12,
-    name: "Passion Fruit Punch",
-    price: 2.75,
-    image: "/drinks/passion-punch.jpg",
-    description: "Tropical fruit punch with a passion kick.",
-  },
-];
+import { fetchProducts } from "../services/ProductService";
+import type { Product } from "../types/product";
 
 const Drink = () => {
+  const [drinks, setDrinks] = useState<Product[]>([]);
   const [query, setQuery] = useState("");
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      const allProducts = await fetchProducts();
+      const filtered = allProducts.filter((p) => p.category === "drinks");
+      setDrinks(filtered);
+    };
+
+    loadProducts();
+  }, []);
 
   const filteredDrinks = drinks.filter((drink) =>
     drink.name.toLowerCase().includes(query.toLowerCase())
@@ -121,7 +46,7 @@ const Drink = () => {
       {filteredDrinks.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {filteredDrinks.map((drink) => (
-            <ProductCard key={drink.id} product={drink} />
+            <ProductCard key={drink._id} product={{ ...drink, id: drink._id }} />
           ))}
         </div>
       ) : (
