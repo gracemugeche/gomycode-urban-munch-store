@@ -3,7 +3,6 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
-// Updated expected response from backend
 interface LoginResponse {
   token: string;
   user: {
@@ -14,7 +13,7 @@ interface LoginResponse {
 }
 
 const AdminLogin = () => {
-  const [email, setEmail] = useState("admin@example.com");
+  const [email, setEmail] = useState("mugesh@gmail.com");
   const [password, setPassword] = useState("admin345");
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -34,8 +33,8 @@ const AdminLogin = () => {
         return;
       }
 
-      login(user, token); // ✅ Save full user and token to context
-      navigate("/admin/dashboard"); // ✅ Redirect to admin dashboard
+      login(user, token);
+      navigate("/admin/dashboard");
     } catch (err) {
       setError("Invalid credentials");
     }
