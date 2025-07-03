@@ -5,12 +5,15 @@ import "./index.css";
 import App from "./App.tsx";
 import { CartProvider } from "./contexts/CartContext.tsx";
 import { Toaster } from "react-hot-toast";
+import { AuthProvider } from "./contexts/AuthContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <CartProvider>
-        <App />
+        <AuthProvider>
+          <App />
+        </AuthProvider>
         <Toaster position="top-right" reverseOrder={false} />
       </CartProvider>
     </BrowserRouter>

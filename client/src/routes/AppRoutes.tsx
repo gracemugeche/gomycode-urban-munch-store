@@ -8,6 +8,9 @@ import Groceries from "../pages/Groceries";
 import Drink from "../pages/Drinks";
 import Signup from "../pages/SignUp";
 import AdminDashboard from "../pages/AdminDashboard";
+import AdminProductPage from "../pages/AdminProduct";
+import AdminLogin from "../pages/AdminLogin";
+import AdminRoute from "../components/AdminRoutes";
 
 const AppRoutes = () => {
   return (
@@ -18,9 +21,26 @@ const AppRoutes = () => {
       <Route path="/cart" element={<Cart />} />
       <Route path="/checkout" element={<Checkout />} />
       <Route path="/meals" element={<Meal />} />
-      <Route path="/groceries" element={<Groceries/>} />
-      <Route path="/drinks" element={<Drink/>} />
-      <Route path="/adminDashboard" element={<AdminDashboard/>} />
+      <Route path="/groceries" element={<Groceries />} />
+      <Route path="/drinks" element={<Drink />} />
+      {/* admin routes */}
+      <Route path="/admin/login" element={<AdminLogin />} />
+      <Route
+        path="/admin/dashboard"
+        element={
+          <AdminRoute>
+            <AdminDashboard />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/Products"
+        element={
+          <AdminRoute>
+            <AdminProductPage />
+          </AdminRoute>
+        }
+      />
     </Routes>
   );
 };

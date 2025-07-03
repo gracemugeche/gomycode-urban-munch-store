@@ -16,11 +16,12 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
     const user = await User.create({ name, email, password });
 
     res.status(201).json({
-      _id: String(user._id),
-      name: user.name,
-      email: user.email,
-      isAdmin: user.isAdmin,
-      token: generateToken(String(user._id), user.isAdmin), // ✅ Pass isAdmin
+      token: generateToken(String(user._id), user.isAdmin),
+      user: {
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+      },
     });
   } catch (error) {
     console.error("Registration error:", error);
@@ -47,11 +48,12 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
     }
 
     res.status(200).json({
-      _id: String(user._id),
-      name: user.name,
-      email: user.email,
-      isAdmin: user.isAdmin,
-      token: generateToken(String(user._id), user.isAdmin), // ✅ Pass isAdmin
+      token: generateToken(String(user._id), user.isAdmin),
+      user: {
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+      },
     });
   } catch (error) {
     console.error("Login error:", error);
