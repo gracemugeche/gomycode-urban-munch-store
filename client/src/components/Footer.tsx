@@ -1,20 +1,15 @@
 import { Link } from "react-router-dom";
 import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
 
-
 const Footer = () => {
   const exploreLinks = [
-    { text: "About Us", to: "/about" },
-    { text: "Contact", to: "/contact" },
-    { text: "Careers", to: "/careers" },
-    { text: "Blog", to: "/blog" },
+    { text: "About Us", to: "#about" },
+    { text: "Contact", to: "#contact" },
   ];
 
   const helpLinks = [
-    { text: "FAQs", to: "/#faqs" },
-    { text: "Support", to: "/support" },
+    { text: "FAQs", to: "#faqs" },
     { text: "Delivery Info", to: "/checkout#delivery-info" },
-    { text: "Returns", to: "/returns" },
   ];
 
   const socials = [
@@ -35,9 +30,15 @@ const Footer = () => {
       <ul className="space-y-2 text-sm">
         {links.map(({ text, to }, i) => (
           <li key={i}>
-            <Link to={to} className="hover:text-purple-600 transition-all">
-              {text}
-            </Link>
+            {to.startsWith("#") ? (
+              <a href={to} className="hover:text-purple-600 transition-all">
+                {text}
+              </a>
+            ) : (
+              <Link to={to} className="hover:text-purple-600 transition-all">
+                {text}
+              </Link>
+            )}
           </li>
         ))}
       </ul>
@@ -45,20 +46,27 @@ const Footer = () => {
   );
 
   return (
-    <footer className="bg-gradient-to-tr from-purple-100 via-purple-200 to-purple-300 text-gray-800 mt-20
-     rounded-t-3xl shadow-lg">
+    <footer
+      className="bg-gradient-to-tr from-purple-100 via-purple-200 to-purple-300 text-gray-800 mt-20
+     rounded-t-3xl shadow-lg"
+    >
       <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
         <div>
-          <h2 className="text-2xl font-bold text-purple-700 mb-3">Urban Munch</h2>
+          <h2 className="text-2xl font-bold text-purple-700 mb-3">
+            Urban Munch
+          </h2>
           <p className="text-sm leading-relaxed">
-            Fresh groceries and ready meals delivered with care.<br />
+            Fresh groceries and ready meals delivered with care.
+            <br />
             Bringing flavor to your doorstep.
           </p>
         </div>
         <FooterList title="Explore" links={exploreLinks} />
         <FooterList title="Help" links={helpLinks} />
         <div>
-          <h3 className="text-lg font-semibold text-purple-800 mb-3">Follow Us</h3>
+          <h3 className="text-lg font-semibold text-purple-800 mb-3">
+            Follow Us
+          </h3>
           <div className="flex space-x-4">
             {socials.map(({ icon: Icon, href }, i) => (
               <a
