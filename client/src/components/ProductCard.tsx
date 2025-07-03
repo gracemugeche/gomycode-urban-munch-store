@@ -3,7 +3,7 @@ import { useCart } from "../contexts/CartContext";
 import toast from "react-hot-toast";
 
 interface Product {
-  id: number;
+  id: string;
   name: string;
   price: number;
   image: string;
