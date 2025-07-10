@@ -15,7 +15,7 @@ interface Props {
 }
 
 const ProductCard = ({ product }: Props) => {
-  const { addToCart } = useCart();
+  const { addItem } = useCart();
   const [quantity, setQuantity] = useState(1);
 
   const increment = () => setQuantity(quantity + 1);
@@ -24,9 +24,16 @@ const ProductCard = ({ product }: Props) => {
   };
 
   const handleAdd = () => {
-    addToCart({ ...product, quantity });
+    addItem({
+      product: product.id, // match CartItem type
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      quantity,
+    });
+
     toast.success(`${quantity} x ${product.name} added to cart ✅`);
-    setQuantity(1); // Reset after add
+    setQuantity(1);
   };
 
   return (
@@ -36,12 +43,13 @@ const ProductCard = ({ product }: Props) => {
         alt={product.name}
         className="h-48 w-full object-cover rounded-md mb-4"
       />
-      <h3 className="text-lg font-semibold text-[rgb(63,56,70)]">{product.name}</h3>
+      <h3 className="text-lg font-semibold text-[rgb(63,56,70)]">
+        {product.name}
+      </h3>
       <p className="text-gray-600">${product.price.toFixed(2)}</p>
       <p className="text-sm text-gray-500 mb-3">{product.description}</p>
 
       <div className="flex items-center justify-between mt-auto">
-        {/* Quantity Controls */}
         <div className="flex items-center gap-2">
           <button
             onClick={decrement}
@@ -61,7 +69,6 @@ const ProductCard = ({ product }: Props) => {
           </button>
         </div>
 
-        {/* Add to Cart */}
         <button
           onClick={handleAdd}
           className="bg-purple-700 text-white text-sm px-3 py-1 rounded-md hover:bg-purple-800 transition"

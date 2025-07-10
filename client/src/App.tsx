@@ -16,7 +16,9 @@ export default function App() {
     "/admin/orders",
     "/admin/users",
     "/admin/dashboard",
-    "/admin/login",
+    "/admin/delivery",
+    "/admin/order-success",
+    // "/admin/login",
   ];
   const shouldHideLayout = hideLayoutRoutes.includes(location.pathname);
 

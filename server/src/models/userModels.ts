@@ -1,38 +1,33 @@
 import mongoose, { Schema, Document, Model, Types } from "mongoose";
-import bcrypt from "bcryptjs";
+
+export type RoleType = "user" | "worker" | "admin";
 
 export interface IUser extends Document {
   _id: Types.ObjectId;
   name: string;
   email: string;
-  password: string;
-  isAdmin: boolean;
-  matchPassword(enteredPassword: string): Promise<boolean>;
+  clerkId: string;
+  role: RoleType;
+  imageUrl?: string;
+  isActive: boolean;
+  phone?: string;
+  createdAt: Date;
 }
 
 const userSchema: Schema<IUser> = new Schema<IUser>(
   {
-    name: { type: String },
+    name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    isAdmin: { type: Boolean, default: false },
+    clerkId: { type: String, required: true, unique: true }, // Clerk ID from Clerk
+    role: { type: String, enum: ["user", "worker", "admin"], default: "user" },
+    imageUrl: { type: String },
+    isActive: { type: Boolean, default: true },
+    phone: { type: String },
   },
   {
     timestamps: true,
   }
 );
-
-userSchema.methods.matchPassword = async function (enteredPassword: string): Promise<boolean> {
-  return await bcrypt.compare(enteredPassword, this.password);
-};
-
-userSchema.pre<IUser>("save", async function (next) {
-  if (!this.isModified("password")) return next();
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
-  next();
-});
-
 
 const User: Model<IUser> = mongoose.model<IUser>("User", userSchema);
 export default User;

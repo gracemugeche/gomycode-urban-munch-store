@@ -24,7 +24,7 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
         >
-          <h1 className="text-4xl md:text-5xl font-bold text-[rgb(72,51,90)] mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-[rgb(59,46,70)] mb-4">
             Welcome to Urban Munch
           </h1>
           <p className="text-lg text-gray-700 mb-6">

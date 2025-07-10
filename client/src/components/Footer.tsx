@@ -1,21 +1,21 @@
 import { Link } from "react-router-dom";
-import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
+import { FaInstagram, FaLinkedin, FaWhatsapp } from "react-icons/fa";
 
 const Footer = () => {
   const exploreLinks = [
     { text: "About Us", to: "#about" },
-    { text: "Contact", to: "#contact" },
+    { text: "Contact", to: "/help#contact" },
   ];
 
   const helpLinks = [
-    { text: "FAQs", to: "#faqs" },
+    { text: "FAQs", to: "/help#faqs" },
     { text: "Delivery Info", to: "/checkout#delivery-info" },
   ];
 
   const socials = [
-    { icon: FaFacebook, href: "https://facebook.com" },
-    { icon: FaTwitter, href: "https://twitter.com" },
-    { icon: FaInstagram, href: "https://instagram.com" },
+    { icon: FaLinkedin, href: "https://www.linkedin.com/in/grace-mugeche/" },
+    { icon: FaWhatsapp, href: "https://web.whatsapp.com/" },
+    { icon: FaInstagram, href: "https://www.instagram.com/_.mugece._/" },
   ];
 
   const FooterList = ({

@@ -7,17 +7,17 @@ import {
   getSingleProduct,
 } from "../controllers/productController";
 import { protect } from "../middlewares/authMiddleware";
-import { admin } from "../middlewares/adminMiddleware"; // ✅ you're already using this
+import { requireRole } from "../middlewares/roleMiddleware"; 
 
 const router = express.Router();
 
-// Public
+// Public routes
 router.get("/", getAllProducts);
 router.get("/:id", getSingleProduct);
 
-// Admin protected
-router.post("/", protect, admin, createProduct);
-router.put("/:id", protect, admin, updateProduct);
-router.delete("/:id", protect, admin, deleteProduct);
+// Admin protected routes
+router.post("/", protect, requireRole(["admin"]), createProduct);
+router.put("/:id", protect, requireRole(["admin"]), updateProduct);
+router.delete("/:id", protect, requireRole(["admin"]), deleteProduct);
 
 export default router;

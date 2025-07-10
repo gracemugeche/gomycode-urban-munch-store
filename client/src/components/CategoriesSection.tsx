@@ -19,7 +19,7 @@ const categories = [
     name: "Drinks",
     image: "/drinks/drinks.jpg",
     link: "/drinks",
-    description: "refreshing drinks,made with pure love.",
+    description: "Refreshing drinks, made with pure love.",
   },
 ];
 
@@ -27,13 +27,14 @@ const CategoriesSection = () => {
   return (
     <section className="py-16 px-4 bg-gray-50">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold text-[rgb(63,56,70)]">
-            Explore Categories
+        <div className="text-center mb-12">
+          <h2 className="text-gray-700 text-2xl font-semibold relative inline-block">
+            <span className="before:absolute before:top-1/2 before:left-0 before:w-12 
+            before:h-0.5 before:bg-gray-300 before:-translate-y-1/2 before:-translate-x-full"></span>
+            Discover our various categories
+            <span className="after:absolute after:top-1/2 after:right-0 after:w-12 after:h-0.5
+             after:bg-gray-300 after:-translate-y-1/2 after:translate-x-full"></span>
           </h2>
-          <p className="text-gray-600 text-sm mt-2">
-            Discover fresh meals, groceries, and drinks curated just for you.
-          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

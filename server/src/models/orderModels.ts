@@ -16,12 +16,17 @@ export interface IOrder extends Document {
     city: string;
     phone: string;
   };
-  paymentMethod: "Cash on Delivery" | "Stripe";
+  paymentMethod: "cod" | "stripe" | "mpesa";
   totalPrice: number;
   isPaid: boolean;
   paidAt?: Date;
   isDelivered: boolean;
   deliveredAt?: Date;
+  currency: "USD" | "KES";
+  status: "pending" | "processing" | "delivered" | "cancelled";
+  deliveryWorker?: mongoose.Types.ObjectId;
+  deliveryStatus?: "pending" | "in_progress" | "delivered" | "failed";
+  note?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -45,14 +50,41 @@ const orderSchema = new Schema<IOrder>(
     },
     paymentMethod: {
       type: String,
-      enum: ["Cash on Delivery", "Stripe"],
-      default: "Cash on Delivery",
+      enum: ["cod", "stripe", "mpesa"],
+      default: "cod",
     },
     totalPrice: { type: Number, required: true },
     isPaid: { type: Boolean, default: false },
     paidAt: { type: Date },
     isDelivered: { type: Boolean, default: false },
     deliveredAt: { type: Date },
+
+    currency: {
+      type: String,
+      enum: ["USD", "KES"],
+      default: "USD",
+    },
+    status: {
+      type: String,
+      enum: ["pending", "processing", "delivered", "cancelled"],
+      default: "pending",
+    },
+
+    // ✅ Delivery assignment
+    deliveryWorker: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    deliveryStatus: {
+      type: String,
+      enum: ["pending", "in_progress", "delivered", "failed"],
+      default: "pending",
+    },
+
+    // ✅ Optional delivery notes (already present in your version)
+    note: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

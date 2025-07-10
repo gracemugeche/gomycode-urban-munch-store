@@ -3,10 +3,12 @@ import cors from 'cors';
 
 // Route imports
 import productRoutes from './routes/productRoutes';
-import authRoutes from './routes/authRoutes';
 import orderRoutes from './routes/orderRoutes';
 import cartRoutes from './routes/cartRoutes';
+import userRoutes from './routes/userRoutes';
+import deliveryRoutes from './routes/deliveryRoutes';
 import { errorHandler } from './middlewares/errorHandler';
+
 
 
 // Create Express app
@@ -18,9 +20,10 @@ app.use(express.json());
 
 // Route setup
 app.use('/api/products', productRoutes);
-app.use('/api/auth', authRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/cart', cartRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/delivery', deliveryRoutes);
 
 // Global error handler 
 app.use(errorHandler);
