@@ -25,7 +25,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     >
       <BrowserRouter>
         <ClerkLoading>
-          <div className="text-center p-10">Loading Clerk...</div>
+          <div className="text-center p-10">Loading Urban Munch...</div>
         </ClerkLoading>
 
         <ClerkLoaded>

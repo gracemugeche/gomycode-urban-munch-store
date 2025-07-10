@@ -33,7 +33,7 @@ export const saveClerkUser = async (
         imageUrl,
         role: safeRole as RoleType,
       });
-      console.log("✅ New user saved with role:", safeRole);
+      // console.log("✅ New user saved with role:", safeRole);
       res.status(201).json({ message: "User saved", user: newUser });
     } else {
       existingUser.name = `${firstName} ${lastName}`;
