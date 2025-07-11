@@ -66,8 +66,8 @@ const AdminProductPage = () => {
     if (useFileUpload && image) {
       try {
         imageUrl = await uploadToCloudinary(image);
-      } catch (err) {
-        alert("Image upload failed");
+      } catch (err:any) {
+        err("Image upload failed");
         return;
       }
     } else if (!useFileUpload && imageUrlInput) {
