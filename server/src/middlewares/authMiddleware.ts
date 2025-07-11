@@ -6,30 +6,40 @@ export interface AuthenticatedRequest extends Request {
   user?: any;
 }
 
+interface ClerkJwtPayload {
+  sub: string;
+  email?: string;
+  role?: string;
+}
+
 export const protect = async (
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    res.status(401).json({ message: "Not authorized, no token" });
-    return;
-  }
-
-  const token = authHeader.split(" ")[1];
-
   try {
-    // Verify token using Clerk
-    const payload = await verifyToken(token, {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      res.status(401).json({ message: "Not authorized, no token" });
+      return;
+    }
+
+    const token = authHeader.split(" ")[1];
+
+    // ✅ Cast payload to the correct interface
+    const { payload } = await verifyToken(token, {
       secretKey: process.env.CLERK_SECRET_KEY!,
     });
 
-    const clerkId = payload.sub;
+    const { sub: clerkId } = payload as ClerkJwtPayload;
 
-    // Look up MongoDB user by Clerk ID
-    const user = await User.findOne({ clerkId });
+    if (!clerkId) {
+      res.status(401).json({ message: "Clerk ID missing from token" });
+      return;
+    }
+
+    const user = await User.findOne({ clerkId: clerkId.trim() });
 
     if (!user) {
       res.status(401).json({ message: "No user found for Clerk ID" });
@@ -39,7 +49,7 @@ export const protect = async (
     req.user = user;
     next();
   } catch (error) {
-    console.error("Clerk token verification failed:", error);
+    console.error("❌ Clerk token verification failed:", error);
     res.status(401).json({ message: "Token invalid or expired" });
   }
 };

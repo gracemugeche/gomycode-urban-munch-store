@@ -17,9 +17,10 @@ export const saveClerkUser = async (
   try {
     const existingUser = await User.findOne({ clerkId: id });
 
+    // ✅ Sanitize and validate role
     const safeRole = typeof role === "string" ? role.trim() : "user";
-
     const validRoles: RoleType[] = ["user", "worker", "admin"];
+
     if (!validRoles.includes(safeRole as RoleType)) {
       res.status(400).json({ message: `Invalid role: ${safeRole}` });
       return;
@@ -27,18 +28,24 @@ export const saveClerkUser = async (
 
     if (!existingUser) {
       const newUser = await User.create({
-        name: `${firstName} ${lastName}`,
+        name: `${firstName || ""} ${lastName || ""}`.trim(),
         email,
         clerkId: id,
         imageUrl,
         role: safeRole as RoleType,
       });
-      // console.log("✅ New user saved with role:", safeRole);
+
       res.status(201).json({ message: "User saved", user: newUser });
     } else {
-      existingUser.name = `${firstName} ${lastName}`;
+      existingUser.name = `${firstName || ""} ${lastName || ""}`.trim();
       existingUser.email = email;
       existingUser.imageUrl = imageUrl;
+
+      // Optionally update role if it changed
+      if (existingUser.role !== safeRole) {
+        existingUser.role = safeRole as RoleType;
+      }
+
       await existingUser.save();
 
       console.log("✅ Existing user updated:", existingUser.role);
@@ -50,7 +57,7 @@ export const saveClerkUser = async (
   }
 };
 
-// Admin-only route: Get all users (original)
+// Admin-only route: Get all users
 export const getAllUsers = async (
   req: Request,
   res: Response
@@ -122,7 +129,7 @@ export const updateUserRole = async (
   }
 };
 
-// Admin-only route: Toggle isActive (disable/enable user)
+// Admin-only route: Toggle isActive
 export const toggleUserStatus = async (
   req: Request,
   res: Response
@@ -149,7 +156,7 @@ export const toggleUserStatus = async (
   }
 };
 
-// Get MongoDB user by Clerk ID (used by frontend AuthContext)
+// Get MongoDB user by Clerk ID
 export const getClerkUserById = async (
   req: Request,
   res: Response
