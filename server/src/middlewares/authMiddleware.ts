@@ -1,11 +1,12 @@
 import { Request, Response, NextFunction } from "express";
-import { verifyJwt } from "@clerk/clerk-sdk-node";
+import { verifyToken } from "@clerk/backend";
 import User from "../models/userModels";
 
 export interface AuthenticatedRequest extends Request {
   user?: any;
 }
 
+// Define the expected Clerk JWT payload shape
 interface ClerkJwtPayload {
   sub: string;
   email?: string;
@@ -17,22 +18,21 @@ export const protect = async (
   res: Response,
   next: NextFunction
 ): Promise<void> => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    res.status(401).json({ message: "Not authorized, no token" });
+    return;
+  }
+
+  const token = authHeader.split(" ")[1];
+
   try {
-    const authHeader = req.headers.authorization;
-
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      res.status(401).json({ message: "Not authorized, no token" });
-      return;
-    }
-
-    const token = authHeader.split(" ")[1];
-
-    // ✅ Correct Clerk issuer and public key
-    const payload = await verifyJwt(token, {
-      issuer: "https://modern-fox-18.clerk.accounts.dev",
-      key: process.env.CLERK_JWT_KEY!,
+    const { payload } = await verifyToken(token, {
+      authorizedParties: [process.env.CLERK_PUBLISHABLE_KEY!],
     });
 
+    // ✅ Cast payload to known structure
     const { sub: clerkId } = payload as ClerkJwtPayload;
 
     if (!clerkId) {
