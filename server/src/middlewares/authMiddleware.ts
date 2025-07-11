@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { verifyToken } from "@clerk/backend";
+import { verifyJwt } from "@clerk/clerk-sdk-node";
 import User from "../models/userModels";
 
 export interface AuthenticatedRequest extends Request {
@@ -27,9 +27,10 @@ export const protect = async (
 
     const token = authHeader.split(" ")[1];
 
-    // ✅ Cast payload to the correct interface
-    const { payload } = await verifyToken(token, {
-      secretKey: process.env.CLERK_SECRET_KEY!,
+    // ✅ Correct Clerk issuer and public key
+    const payload = await verifyJwt(token, {
+      issuer: "https://modern-fox-18.clerk.accounts.dev",
+      key: process.env.CLERK_JWT_KEY!,
     });
 
     const { sub: clerkId } = payload as ClerkJwtPayload;
