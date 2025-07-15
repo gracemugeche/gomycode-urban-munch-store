@@ -15,7 +15,7 @@ const router = express.Router();
 
 // 🔐 Routes for logged-in users
 router.post("/", protect, createOrder);               // Place new order
-router.get("/myorders", protect, getMyOrders);        // Get user's own orders
+router.get("/my-orders", protect, getMyOrders);        // Get user's own orders
 
 // 🔐 Admin-only routes
 router.get("/", protect, requireRole(["admin"]), getOrders);           // View all orders
