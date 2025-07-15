@@ -24,7 +24,7 @@ const AboutSection = () => {
       </div>
 
       {/* middle section */}
-      <div className="bg-gray-150 py-10 px-6">
+      <div className="bg-gray-200 py-10 px-6">
         <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           <div>
             <FaCity size={36} className="mx-auto text-purple-700 mb-2" />

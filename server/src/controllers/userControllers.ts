@@ -1,69 +1,11 @@
 import { Request, Response } from "express";
 import User, { RoleType } from "../models/userModels";
 import Order from "../models/orderModels";
+import { AuthenticatedRequest } from "../middlewares/authMiddleware";
 
-// ✅ Save or update Clerk user after login
-export const saveClerkUser = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  const { id, firstName, lastName, email, imageUrl, role } = req.body;
-
-  if (!email || !id) {
-    res.status(400).json({ message: "Missing required fields" });
-    return;
-  }
-
+export const getAllUsers = async (req: Request, res: Response): Promise<void> => {
   try {
-    const existingUser = await User.findOne({ clerkId: id });
-
-    // ✅ Sanitize and validate role
-    const safeRole = typeof role === "string" ? role.trim() : "user";
-    const validRoles: RoleType[] = ["user", "worker", "admin"];
-
-    if (!validRoles.includes(safeRole as RoleType)) {
-      res.status(400).json({ message: `Invalid role: ${safeRole}` });
-      return;
-    }
-
-    if (!existingUser) {
-      const newUser = await User.create({
-        name: `${firstName || ""} ${lastName || ""}`.trim(),
-        email,
-        clerkId: id,
-        imageUrl,
-        role: safeRole as RoleType,
-      });
-
-      res.status(201).json({ message: "User saved", user: newUser });
-    } else {
-      existingUser.name = `${firstName || ""} ${lastName || ""}`.trim();
-      existingUser.email = email;
-      existingUser.imageUrl = imageUrl;
-
-      // Optionally update role if it changed
-      if (existingUser.role !== safeRole) {
-        existingUser.role = safeRole as RoleType;
-      }
-
-      await existingUser.save();
-
-      console.log("✅ Existing user updated:", existingUser.role);
-      res.status(200).json({ message: "User updated", user: existingUser });
-    }
-  } catch (err) {
-    console.error("❌ Error saving Clerk user", err);
-    res.status(500).json({ message: "Failed to save user" });
-  }
-};
-
-// Admin-only route: Get all users
-export const getAllUsers = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  try {
-    const users = await User.find().select("-__v");
+    const users = await User.find().select("-__v -password");
     res.status(200).json(users);
   } catch (err) {
     console.error("Failed to fetch users", err);
@@ -71,7 +13,6 @@ export const getAllUsers = async (
   }
 };
 
-// Admin-only route: Get all users with order count
 export const getAllUsersWithStats = async (
   req: Request,
   res: Response
@@ -100,11 +41,7 @@ export const getAllUsersWithStats = async (
   }
 };
 
-// Admin-only route: Update user role
-export const updateUserRole = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const updateUserRole = async (req: Request, res: Response): Promise<void> => {
   const { userId, role } = req.body;
 
   if (!["user", "admin", "worker"].includes(role)) {
@@ -129,7 +66,6 @@ export const updateUserRole = async (
   }
 };
 
-// Admin-only route: Toggle isActive
 export const toggleUserStatus = async (
   req: Request,
   res: Response
@@ -156,24 +92,41 @@ export const toggleUserStatus = async (
   }
 };
 
-// Get MongoDB user by Clerk ID
-export const getClerkUserById = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  const { clerkId } = req.params;
-
+export const getMe = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
-    const user = await User.findOne({ clerkId });
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+    res.status(200).json(user);
+  } catch (err) {
+    console.error("Error fetching current user", err);
+    res.status(500).json({ message: "Failed to fetch user" });
+  }
+};
 
+export const updateMe = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  try {
+    const user = await User.findById(req.user.id);
     if (!user) {
       res.status(404).json({ message: "User not found" });
       return;
     }
 
-    res.status(200).json(user);
+    const { name, phone, address } = req.body;
+    if (name !== undefined) user.name = name;
+    if (phone !== undefined) user.phone = phone;
+    if (address !== undefined) user.address = address;
+
+    await user.save();
+
+    res.status(200).json({ user });
   } catch (err) {
-    console.error("Error fetching Clerk user:", err);
-    res.status(500).json({ message: "Failed to fetch user" });
+    console.error("Error updating user", err);
+    res.status(500).json({ message: "Failed to update user" });
   }
 };
+
+
+

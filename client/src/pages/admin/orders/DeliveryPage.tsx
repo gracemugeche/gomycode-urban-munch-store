@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
-import { getMyDeliveries, updateDeliveryStatus } from "../../../services/deliveryService";
+import {
+  getMyDeliveries,
+  updateDeliveryStatus,
+} from "../../../services/deliveryService";
 import type { DeliveryOrder } from "../../../services/deliveryService";
-import { useAuth } from "@clerk/clerk-react";
 
 export default function DeliveryPage() {
   const [orders, setOrders] = useState<DeliveryOrder[]>([]);
   const [loading, setLoading] = useState(true);
-  const { getToken } = useAuth();
 
   const fetchDeliveries = async () => {
     try {
-      const token = await getToken();
+      const token = localStorage.getItem("token");
       if (!token) return;
       const data = await getMyDeliveries(token);
       console.log("📦 Deliveries fetched:", data);
@@ -23,7 +24,7 @@ export default function DeliveryPage() {
   };
 
   const handleStatusUpdate = async (orderId: string, newStatus: string) => {
-    const token = await getToken();
+    const token = localStorage.getItem("token");
     await updateDeliveryStatus(orderId, newStatus, "", token || "");
     fetchDeliveries();
   };
@@ -32,7 +33,8 @@ export default function DeliveryPage() {
     fetchDeliveries();
   }, []);
 
-  if (loading) return <p className="text-center mt-10">Loading deliveries...</p>;
+  if (loading)
+    return <p className="text-center mt-10">Loading deliveries...</p>;
 
   return (
     <div className="p-4 max-w-7xl mx-auto">
@@ -44,7 +46,6 @@ export default function DeliveryPage() {
         <p className="text-center text-gray-500">No deliveries found.</p>
       )}
 
-      {/* Grid layout for cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {orders.map((order) => (
           <div
@@ -58,7 +59,8 @@ export default function DeliveryPage() {
 
               <div className="text-sm text-gray-600 space-y-1 mb-3">
                 <p>
-                  <strong>Address:</strong> {order.deliveryAddress.street}, {order.deliveryAddress.city}
+                  <strong>Address:</strong> {order.deliveryAddress.street},{" "}
+                  {order.deliveryAddress.city}
                 </p>
                 <p>
                   <strong>Phone:</strong> {order.deliveryAddress.phone}
@@ -100,7 +102,6 @@ export default function DeliveryPage() {
               </div>
             </div>
 
-            {/* Responsive buttons */}
             <div className="flex flex-wrap gap-2 mt-auto">
               <button
                 onClick={() => handleStatusUpdate(order._id, "in_progress")}

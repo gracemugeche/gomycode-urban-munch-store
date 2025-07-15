@@ -11,7 +11,11 @@ const RoleRoute = ({ children, allowedRoles, redirectTo = "/" }: RoleRouteProps)
   const { role, loading } = useAuth();
 
   if (loading) {
-    return <p className="text-center mt-10">Checking access...</p>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p>Loading...</p>
+      </div>
+    );
   }
 
   if (!role || !allowedRoles.includes(role)) {

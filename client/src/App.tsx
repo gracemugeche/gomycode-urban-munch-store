@@ -12,13 +12,15 @@ export default function App() {
     "/signup",
     "/cart",
     "/checkout",
-    "/admin/products",
-    "/admin/orders",
-    "/admin/users",
-    "/admin/dashboard",
-    "/admin/delivery",
-    "/admin/order-success",
-    // "/admin/login",
+    "/adminDashboard/products",
+    "/adminDashboard/orders",
+    "/adminDashboard/users",
+    "/adminDashboard",
+    "/adminDashboard/delivery",
+    "/order-success",
+    "/dashboard",
+    "/orders",
+    "/account",
   ];
   const shouldHideLayout = hideLayoutRoutes.includes(location.pathname);
 

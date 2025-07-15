@@ -44,7 +44,7 @@ const Help = () => {
 
       {/* FAQ Section Header */}
       <section className="text-center" id="faqs">
-        <h2 className="text-3xl font-semibold text-gray-800 ">
+        <h2 className="text-3xl font-semibold text-gray-800">
           Frequently Asked Questions
         </h2>
       </section>
@@ -107,44 +107,57 @@ const Help = () => {
         </div>
       </section>
 
-      {/* Contact Form */}
-      <section
-        className="bg-white p-8 rounded-lg shadow-sm border border-gray-200"
-        id="contact"
-      >
+      {/* quick help guide section */}
+      <section className="bg-white p-8 rounded-lg shadow-sm border border-gray-200">
         <h3 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
-          Send us a Message
+          Quick Help Guide
         </h3>
-        <p className="text-center max-w-xl mx-auto mb-10 text-sm text-gray-600">
-          Have questions, feedback, or want to reach out? Fill the form below
-          and we'll get back to you shortly.
-        </p>
-        <form className="grid gap-4 md:grid-cols-2">
-          <input
-            type="text"
-            placeholder="Your Name"
-            className="p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 
-            focus:ring-purple-400"
-          />
-          <input
-            type="email"
-            placeholder="Your Email"
-            className="p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2
-             focus:ring-purple-400"
-          />
-          <textarea
-            placeholder="Your Message"
-            rows={3}
-            className="md:col-span-2 p-3 rounded-md border border-gray-300 focus:outline-none 
-            focus:ring-2 focus:ring-purple-400"
-          ></textarea>
-          <button
-            type="submit"
-            className="md:col-span-2 bg-purple-700 text-white py-2 rounded-md hover:bg-purple-800 transition"
-          >
-            Send Message
-          </button>
-        </form>
+
+        <div className="max-w-xl mx-auto space-y-4">
+          <div className="flex flex-col gap-2">
+            <div className="bg-gray-100 rounded-lg px-4 py-3 w-fit self-start">
+              <p>❓ I can't find my order.</p>
+            </div>
+            <div className="bg-purple-100 rounded-lg px-4 py-3 w-fit self-end">
+              <p>➡ Go to your dashboard → Orders.</p>
+            </div>
+
+            <div className="bg-gray-100 rounded-lg px-4 py-3 w-fit self-start">
+              <p>❓ My delivery is late.</p>
+            </div>
+            <div className="bg-purple-100 rounded-lg px-4 py-3 w-fit self-end">
+              <p>➡ Call or WhatsApp us directly for updates.</p>
+            </div>
+
+            <div className="bg-gray-100 rounded-lg px-4 py-3 w-fit self-start">
+              <p>❓ I have a payment issue.</p>
+            </div>
+            <div className="bg-purple-100 rounded-lg px-4 py-3 w-fit self-end">
+              <p>➡ Check our Payment FAQs above for guidance.</p>
+            </div>
+
+            <div className="bg-gray-100 rounded-lg px-4 py-3 w-fit self-start">
+              <p>❓ I want to return an item.</p>
+            </div>
+            <div className="bg-purple-100 rounded-lg px-4 py-3 w-fit self-end">
+              <p>➡ Returns allowed within 30 days. See our Returns FAQ.</p>
+            </div>
+
+            <div className="bg-gray-100 rounded-lg px-4 py-3 w-fit self-start">
+              <p>❓ My order wasn’t delivered.</p>
+            </div>
+            <div className="bg-purple-100 rounded-lg px-4 py-3 w-fit self-end">
+              <p>➡ Contact us by phone or WhatsApp right away.</p>
+            </div>
+
+            <div className="bg-gray-100 rounded-lg px-4 py-3 w-fit self-start">
+              <p>❓ Still need help?</p>
+            </div>
+            <div className="bg-purple-100 rounded-lg px-4 py-3 w-fit self-end">
+              <p>➡ Chat with us on WhatsApp for fast answers.</p>
+            </div>
+          </div>
+        </div>
       </section>
     </div>
   );

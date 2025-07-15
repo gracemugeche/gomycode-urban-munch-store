@@ -1,27 +1,13 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  useCallback,
-} from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import type { CartItem } from "../types/cart";
-import {
-  fetchCart,
-  addToCart as apiAddToCart,
-  removeFromCart as apiRemoveFromCart,
-  setItemQuantity as apiSetItemQuantity, 
-} from "../services/cartService";
-import { useUser, useAuth } from "@clerk/clerk-react";
 
-// 🛒 Context type
 interface CartContextType {
   cartItems: CartItem[];
-  addItem: (item: CartItem) => Promise<void>;
-  removeItem: (productId: string) => Promise<void>;
-  increaseQuantity: (productId: string) => Promise<void>;
-  decreaseQuantity: (productId: string) => Promise<void>;
+  addItem: (item: CartItem) => void;
+  removeItem: (productId: string) => void;
+  increaseQuantity: (productId: string) => void;
+  decreaseQuantity: (productId: string) => void;
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
@@ -36,64 +22,65 @@ export const useCart = () => {
 };
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const { isSignedIn } = useUser();
-  const { getToken } = useAuth();
+  // ✅ Load from localStorage on first load
+  const [cartItems, setCartItems] = useState<CartItem[]>(() => {
+    const storedCart = localStorage.getItem("cartItems");
+    return storedCart ? JSON.parse(storedCart) : [];
+  });
 
-  const loadCart = useCallback(async () => {
-    if (!isSignedIn) return;
-    const token = await getToken();
-    if (!token) return;
-    try {
-      const cart = await fetchCart(token);
-      setCartItems(cart.items);
-    } catch (err) {
-      console.error("Failed to load cart:", err);
-    }
-  }, [isSignedIn, getToken]);
-
+  // ✅ Save cart to localStorage on every change
   useEffect(() => {
-    loadCart();
-  }, [loadCart]);
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  }, [cartItems]);
 
-  const addItem = async (item: CartItem) => {
-    const token = await getToken();
-    if (!token) return;
-    const updatedCart = await apiAddToCart(item, token);
-    setCartItems(updatedCart.items);
+  const addItem = (item: CartItem) => {
+    setCartItems((prev) => {
+      const exists = prev.find((p) => p.product === item.product);
+      if (exists) {
+        return prev.map((p) =>
+          p.product === item.product
+            ? { ...p, quantity: p.quantity + item.quantity }
+            : p
+        );
+      }
+      return [...prev, { ...item }];
+    });
   };
 
-  const removeItem = async (productId: string) => {
-    const token = await getToken();
-    if (!token) return;
-    const updatedCart = await apiRemoveFromCart(productId, token);
-    setCartItems(updatedCart.items);
+  const removeItem = (productId: string) => {
+    setCartItems((prev) => prev.filter((item) => item.product !== productId));
   };
 
-  const increaseQuantity = async (productId: string) => {
-    const token = await getToken();
-    if (!token) return;
-    const item = cartItems.find((i) => i.product === productId);
-    if (!item) return;
-    const updatedCart = await apiSetItemQuantity(productId, item.quantity + 1, token);
-    setCartItems(updatedCart.items);
+  const increaseQuantity = (productId: string) => {
+    setCartItems((prev) =>
+      prev.map((item) =>
+        item.product === productId
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      )
+    );
   };
 
-  const decreaseQuantity = async (productId: string) => {
-    const token = await getToken();
-    if (!token) return;
-    const item = cartItems.find((i) => i.product === productId);
-    if (!item || item.quantity <= 1) return;
-    const updatedCart = await apiSetItemQuantity(productId, item.quantity - 1, token);
-    setCartItems(updatedCart.items);
+  const decreaseQuantity = (productId: string) => {
+    setCartItems((prev) =>
+      prev.map((item) =>
+        item.product === productId && item.quantity > 1
+          ? { ...item, quantity: item.quantity - 1 }
+          : item
+      )
+    );
   };
 
   const clearCart = () => {
     setCartItems([]);
+    localStorage.removeItem("cartItems");
   };
 
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = cartItems.reduce((sum, item) => sum + item.quantity * item.price, 0);
+  const totalPrice = cartItems.reduce(
+    (sum, item) => sum + item.quantity * item.price,
+    0
+  );
 
   return (
     <CartContext.Provider

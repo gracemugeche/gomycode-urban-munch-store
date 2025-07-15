@@ -1,14 +1,16 @@
-import { RedirectToSignIn, SignedIn, useUser } from "@clerk/clerk-react";
-import type { PropsWithChildren } from "react";
+import  type { ReactNode } from "react";
+import { Navigate } from "react-router-dom";
 
-export default function ProtectedRoute({children}:PropsWithChildren) {
-    const{isSignedIn} = useUser()
-    if(!isSignedIn) {
-        return <RedirectToSignIn />
-    }
-  return (
-    <SignedIn>
-        {children}
-    </SignedIn>
-  )
+interface ProtectedRouteProps {
+  children: ReactNode;
+}
+
+export default function ProtectedRoute({ children }: ProtectedRouteProps) {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <>{children}</>;
 }

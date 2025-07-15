@@ -1,34 +1,29 @@
 import express from "express";
 import {
-  saveClerkUser,
   getAllUsers,
   getAllUsersWithStats,
   updateUserRole,
   toggleUserStatus,
-  getClerkUserById,
+  getMe,
+  updateMe,
 } from "../controllers/userControllers";
-
-import { protect } from "../middlewares/authMiddleware";
-import { requireRole } from "../middlewares/roleMiddleware";
+import {
+  getMyOrders,
+} from "../controllers/orderController";
+import { protect, adminOnly } from "../middlewares/authMiddleware";
 
 const router = express.Router();
 
-// ✅ Public: Save or update Clerk user after login
-router.post("/clerk", saveClerkUser);
+// ✅ User self info route
+router.get("/me", protect, getMe);
+router.patch("/me", protect, updateMe);
+router.get("/my-orders", protect, getMyOrders);
 
-// ✅ Public: Get MongoDB user by Clerk ID
-router.get("/clerk/:clerkId", getClerkUserById);
 
-// ✅ Admin: Get all users (basic)
-router.get("/", protect, requireRole(["admin"]), getAllUsers);
-
-// ✅ Admin: Get users + stats (order count)
-router.get("/stats", protect, requireRole(["admin"]), getAllUsersWithStats);
-
-// ✅ Admin: Update user role
-router.put("/update-role", protect, requireRole(["admin"]), updateUserRole);
-
-// ✅ Admin: Enable/Disable user
-router.put("/:userId/status", protect, requireRole(["admin"]), toggleUserStatus);
+// ✅ Admin-only routes
+router.get("/", protect, adminOnly, getAllUsers);
+router.get("/stats", protect, adminOnly, getAllUsersWithStats);
+router.patch("/role", protect, adminOnly, updateUserRole);
+router.patch("/status/:userId", protect, adminOnly, toggleUserStatus);
 
 export default router;

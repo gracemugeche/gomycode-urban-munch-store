@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useAuth } from "@clerk/clerk-react";
 
 interface Order {
   _id: string;
   user: {
     name: string;
     email: string;
-  };
+  } | null;
   orderItems: {
     name: string;
     quantity: number;
@@ -36,12 +35,11 @@ const OrderList = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [workers, setWorkers] = useState<{ _id: string; name: string }[]>([]);
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
-  const { getToken } = useAuth();
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const token = await getToken();
+        const token = localStorage.getItem("token");
         const res = await axios.get<Order[]>(
           `${import.meta.env.VITE_API_BASE_URL}/orders`,
           {
@@ -55,18 +53,18 @@ const OrderList = () => {
     };
 
     fetchOrders();
-  }, [getToken]);
+  }, []);
 
   const fetchWorkers = async () => {
-    const token = await getToken();
-    const res = await axios.get<{ _id: String; name: String }[]>(
+    const token = localStorage.getItem("token");
+    const res = await axios.get<{ _id: string; name: string }[]>(
       `${import.meta.env.VITE_API_BASE_URL}/users?role=worker`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
     );
     setWorkers(
-      (res.data as any[]).map((worker) => ({
+      res.data.map((worker) => ({
         _id: String(worker._id),
         name: String(worker.name),
       }))
@@ -74,7 +72,7 @@ const OrderList = () => {
   };
 
   const assignWorker = async (orderId: string, workerId: string) => {
-    const token = await getToken();
+    const token = localStorage.getItem("token");
     await axios.post(
       `${import.meta.env.VITE_API_BASE_URL}/delivery/assign`,
       { orderId, workerId },
@@ -106,7 +104,7 @@ const OrderList = () => {
                 </p>
                 <p className="text-sm text-gray-500">
                   <span className="font-semibold text-gray-700">User:</span>{" "}
-                  {order.user.name} ({order.user.email})
+                  {order.user ? `${order.user.name} (${order.user.email})` : "Deleted User"}
                 </p>
                 <p className="text-sm text-gray-500">
                   <span className="font-semibold text-gray-700">Created:</span>{" "}
@@ -117,7 +115,7 @@ const OrderList = () => {
                     <span className="font-semibold text-gray-700">
                       Assigned Worker:
                     </span>{" "}
-                    {order.deliveryWorker.name}
+                    {order.deliveryWorker?.name || "Unassigned"}
                   </p>
                 )}
               </div>

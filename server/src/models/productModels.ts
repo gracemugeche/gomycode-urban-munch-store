@@ -24,7 +24,7 @@ const productSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
-    enum: ["groceries", "meals", "drinks"], // ✅ limit to specific categories
+    enum: ["groceries", "meals", "drinks"], 
   },
 
   inStock: {

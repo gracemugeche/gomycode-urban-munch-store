@@ -18,7 +18,7 @@ export const fetchCart = async (token: string): Promise<CartResponse> => {
   return res.data;
 };
 
-// Add to cart (or update if item exists)
+// Add to cart
 export const addToCart = async (
   item: CartItem,
   token: string
@@ -29,7 +29,7 @@ export const addToCart = async (
   return res.data;
 };
 
-// Set item quantity directly (used by increase/decrease logic now)
+// Set quantity
 export const setItemQuantity = async (
   productId: string,
   quantity: number,
@@ -45,7 +45,7 @@ export const setItemQuantity = async (
   return res.data;
 };
 
-// Remove item from cart
+// Remove item
 export const removeFromCart = async (
   productId: string,
   token: string

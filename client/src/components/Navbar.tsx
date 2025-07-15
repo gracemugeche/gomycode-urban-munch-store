@@ -1,11 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { NavLink } from "react-router-dom";
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  useClerk,
-} from "@clerk/clerk-react";
+import { NavLink, useNavigate } from "react-router-dom";
 import { FaUserCircle, FaShoppingCart } from "react-icons/fa";
 import { IoFastFood } from "react-icons/io5";
 import { FiHelpCircle } from "react-icons/fi";
@@ -17,13 +11,22 @@ const navLinks = [
   { name: "Drinks", path: "/drinks" },
 ];
 
-const NavLinks = ({ isMobile }: { isMobile?: boolean }) => {
-  const baseClass = isMobile ? "block" : "";
+const NavLinks = ({
+  isMobile,
+  onLinkClick,
+}: {
+  isMobile?: boolean;
+  onLinkClick?: () => void;
+}) => {
+  const baseClass = isMobile
+    ? "block p-3 bg-white shadow-md rounded-md text-center text-sm font-medium hover:bg-purple-50 transition"
+    : "";
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const { openUserProfile, signOut } = useClerk();
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token");
 
-  // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -33,10 +36,16 @@ const NavLinks = ({ isMobile }: { isMobile?: boolean }) => {
         setDropdownOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setDropdownOpen(false);
+    navigate("/login");
+  };
 
   return (
     <>
@@ -44,7 +53,8 @@ const NavLinks = ({ isMobile }: { isMobile?: boolean }) => {
         <NavLink
           key={name}
           to={path}
-          className={`${baseClass} hover:text-purple-600 transition`}
+          onClick={onLinkClick}
+          className={`${baseClass} hover:text-purple-600`}
         >
           {name}
         </NavLink>
@@ -52,68 +62,71 @@ const NavLinks = ({ isMobile }: { isMobile?: boolean }) => {
 
       <NavLink
         to="/help"
-        className={`${baseClass} hover:text-purple-600 transition text-lg`}
+        onClick={onLinkClick}
+        className={`${baseClass} text-lg`}
       >
         <FiHelpCircle />
       </NavLink>
 
-      {/* Cart is always visible */}
       <NavLink
         to="/cart"
-        className={`${baseClass} text-purple-900 hover:text-purple-600 transition text-lg`}
+        onClick={onLinkClick}
+        className={`${baseClass} text-lg text-purple-900`}
       >
         <FaShoppingCart />
       </NavLink>
 
-      <SignedIn>
-        {/* Profile Dropdown */}
-        <div className="relative" ref={dropdownRef}>
+      {token && (
+        <div className={`${isMobile ? "" : "relative"}`} ref={dropdownRef}>
           <button
             onClick={() => setDropdownOpen((prev) => !prev)}
-            className="text-lg text-purple-900 hover:text-purple-600"
+            className="text-lg text-purple-900 hover:text-purple-600 flex items-center gap-1 p-3"
           >
             <FaUserCircle size={22} />
+            <span className={`${isMobile ? "text-sm" : "hidden"}`}>Account</span>
           </button>
 
           {dropdownOpen && (
-            <div className="absolute right-0 bg-white shadow-md border rounded-md mt-2 w-44 z-50">
+            <div
+              className={`${
+                isMobile
+                  ? "bg-white rounded-md shadow-md p-2 mt-2 space-y-2"
+                  : "absolute right-0 bg-white shadow-md rounded-md mt-2 w-44 z-50"
+              }`}
+            >
               <NavLink
                 to="/dashboard"
-                onClick={() => setDropdownOpen(false)}
-                className="block px-4 py-2 hover:bg-purple-100 text-sm text-gray-700"
+                onClick={() => {
+                  setDropdownOpen(false);
+                  onLinkClick?.();
+                }}
+                className="block px-4 py-2 rounded-md hover:bg-purple-50 text-sm text-gray-700"
               >
                 My Dashboard
               </NavLink>
               <button
                 onClick={() => {
-                  openUserProfile();
-                  setDropdownOpen(false);
+                  handleLogout();
+                  onLinkClick?.();
                 }}
-                className="block w-full text-left px-4 py-2 hover:bg-purple-100 text-sm text-gray-700"
+                className="block w-full text-left px-4 py-2 rounded-md hover:bg-purple-50 text-sm text-red-600 border-t"
               >
-                Manage My Account
-              </button>
-              <button
-                onClick={() => {
-                  signOut();
-                  setDropdownOpen(false);
-                }}
-                className="block w-full text-left px-4 py-2 hover:bg-purple-100 text-sm text-red-600 border-t"
-              >
-                Sign Out
+                Logout
               </button>
             </div>
           )}
         </div>
-      </SignedIn>
+      )}
 
-      <SignedOut>
-        <SignInButton mode="modal">
-          <button className={`${baseClass} hover:text-purple-600 text-lg`}>
-            <FaUserCircle />
-          </button>
-        </SignInButton>
-      </SignedOut>
+      {!token && (
+        <NavLink
+          to="/login"
+          onClick={onLinkClick}
+          className={`${baseClass} text-lg`}
+        >
+          <FaUserCircle />
+        </NavLink>
+      )}
     </>
   );
 };
@@ -122,14 +135,11 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <nav
-      className="bg-gradient-to-r from-purple-200 via-purple-100 to-purple-50 shadow-md 
-      text-purple-800 font-[Poppins]"
-    >
+    <nav className="bg-gradient-to-r from-purple-200 via-purple-100 to-purple-50 shadow-md text-purple-800 font-[Poppins]">
       <div className="flex justify-between items-center max-w-7xl mx-auto px-6 py-4">
         <NavLink
           to="/"
-          className="flex items-center gap-2 text-2xl font-bold tracking-wide text-purple-900 transition-all duration-300"
+          className="flex items-center gap-2 text-2xl font-bold tracking-wide text-purple-900"
         >
           <IoFastFood className="text-purple-800" size={26} />
           Urban Munch
@@ -143,27 +153,20 @@ const Navbar = () => {
           className="md:hidden text-purple-700"
           onClick={() => setMenuOpen(!menuOpen)}
         >
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth={2}
-              d={
-                menuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"
-              }
+              d={menuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
             />
           </svg>
         </button>
       </div>
 
       {menuOpen && (
-        <div className="md:hidden px-6 pb-4 space-y-2 text-sm font-medium">
-          <NavLinks isMobile />
+        <div className="md:hidden px-6 pb-6 space-y-3 bg-purple-50">
+          <NavLinks isMobile onLinkClick={() => setMenuOpen(false)} />
         </div>
       )}
     </nav>

@@ -25,7 +25,7 @@ const ProductCard = ({ product }: Props) => {
 
   const handleAdd = () => {
     addItem({
-      product: product.id, // match CartItem type
+      product: product.id,
       name: product.name,
       price: product.price,
       image: product.image,

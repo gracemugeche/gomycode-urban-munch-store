@@ -3,11 +3,9 @@ import { useState } from "react";
 import DeliverySection from "../components/DeliverySection";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useAuth } from "@clerk/clerk-react";
 
 const Checkout = () => {
   const { cartItems, totalPrice, clearCart } = useCart();
-  const { getToken } = useAuth();
   const navigate = useNavigate();
 
   const [paymentMethod, setPaymentMethod] = useState("cod");
@@ -19,8 +17,12 @@ const Checkout = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const token = await getToken();
-    if (!token) return;
+
+    const token = localStorage.getItem("token"); 
+    if (!token) {
+      navigate("/login"); 
+      return;
+    }
 
     try {
       await axios.post(
@@ -91,7 +93,8 @@ const Checkout = () => {
 
             <button
               type="submit"
-              className="w-full mt-6 bg-purple-700 hover:bg-purple-800 text-white font-semibold py-3 rounded transition"
+              className="w-full mt-6 bg-purple-700 hover:bg-purple-800 text-white font-semibold
+               py-3 rounded transition"
             >
               Confirm Order
             </button>
@@ -104,7 +107,9 @@ const Checkout = () => {
           <ul className="space-y-2 text-sm text-gray-700">
             {cartItems.map((item) => (
               <li key={item.product} className="flex justify-between">
-                <span>{item.name} x {item.quantity}</span>
+                <span>
+                  {item.name} x {item.quantity}
+                </span>
                 <span>${(item.price * item.quantity).toFixed(2)}</span>
               </li>
             ))}

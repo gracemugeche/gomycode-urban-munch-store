@@ -57,7 +57,7 @@ export const updateDeliveryStatus = async (req: Request, res: Response): Promise
 export const getMyDeliveries = async (req: Request, res: Response): Promise<void> => {
   try {
 
-    console.log("🔍 Worker requesting deliveries:", req.user?._id);
+    // console.log("🔍 Worker requesting deliveries:", req.user?._id);
 
     const userId = req.user._id;
     const user = await User.findById(userId);

@@ -9,29 +9,29 @@ const AdminDashboard = () => {
     {
       name: "Products",
       icon: <Package className="h-10 w-10 text-purple-600" />,
-      to: "/admin/products",
+      to: "products",
     },
     {
       name: "Orders",
       icon: <FileText className="h-10 w-10 text-purple-600" />,
-      to: "/admin/orders",
+      to: "orders",
       restricted: true,
     },
     {
       name: "Delivery",
       icon: <Truck className="h-10 w-10 text-purple-600" />,
-      to: "/admin/delivery",
+      to: "delivery",
     },
     {
       name: "Finance",
       icon: <Wallet className="h-10 w-10 text-purple-600" />,
-      to: "/admin/finance",
+      to: "finance",
       restricted: true,
     },
     {
       name: "Users",
       icon: <Users className="h-10 w-10 text-purple-600" />,
-      to: "/admin/users",
+      to: "users",
       restricted: true,
     },
   ];

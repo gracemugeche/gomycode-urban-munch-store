@@ -14,7 +14,7 @@ const Footer = () => {
 
   const socials = [
     { icon: FaLinkedin, href: "https://www.linkedin.com/in/grace-mugeche/" },
-    { icon: FaWhatsapp, href: "https://web.whatsapp.com/" },
+   { icon: FaWhatsapp, href: "https://wa.me/254748621252?text=Hi%20Urban%20Munch%20team!%20I%20need%20help%20with..." },
     { icon: FaInstagram, href: "https://www.instagram.com/_.mugece._/" },
   ];
 

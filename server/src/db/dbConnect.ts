@@ -1,13 +1,13 @@
 import mongoose from 'mongoose';
 
-export async function dbconnect () {
-    try {
-        await mongoose.connect (process.env.MONGO_URI !);
-        console.log(`Db connected successfully `);
-    } catch (error:any) {
-        console.log(`Db connection error => ${error.message}`)
-    }
-}
+// export async function dbconnect () {
+//     try {
+//         await mongoose.connect (process.env.MONGO_URI !);
+//         console.log(`Db connected successfully `);
+//     } catch (error:any) {
+//         console.log(`Db connection error => ${error.message}`)
+//     }
+// }
 export async function dbconnect2() {
     try {
         await mongoose.connect (process.env.MONGO_PROD_URI !);

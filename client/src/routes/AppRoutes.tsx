@@ -6,7 +6,12 @@ import Meal from "../pages/Meals";
 import Groceries from "../pages/Groceries";
 import Drink from "../pages/Drinks";
 import Help from "../pages/Help";
-import Dashboard from "../pages/Dashboard";
+import Dashboard from "../pages/users/Dashboard";
+import OrdersPage from "../pages/users/order";
+import AccountPage from "../pages/users/account";
+import Login from "../pages/Login";
+import Signup from "../pages/Signup";
+import OrderSuccess from "../pages/OrderSuccess";
 
 // Admin pages
 import AdminDashboard from "../pages/admin/AdminDashboard";
@@ -19,13 +24,10 @@ import DeliveryPage from "../pages/admin/orders/DeliveryPage";
 import AdminSidebarLayout from "../components/AdminSidebar";
 import RoleRoute from "./RoleRoute";
 
-import RedirectAfterLogin from "../pages/RedirectAfterLogin";
-import OrderSuccess from "../pages/OrderSuccess";
-
 const AppRoutes = () => {
   return (
     <Routes>
-      {/* ✅ Public Routes */}
+      {/* Public Routes */}
       <Route path="/" element={<Home />} />
       <Route path="/checkout" element={<Checkout />} />
       <Route path="/meals" element={<Meal />} />
@@ -33,10 +35,13 @@ const AppRoutes = () => {
       <Route path="/drinks" element={<Drink />} />
       <Route path="/help" element={<Help />} />
       <Route path="/cart" element={<Cart />} />
-      <Route path="/redirect" element={<RedirectAfterLogin />} />
       <Route path="/order-success" element={<OrderSuccess />} />
 
-      {/* ✅ User Dashboard */}
+      {/* Auth Routes */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+
+      {/* User Dashboard */}
       <Route
         path="/dashboard"
         element={
@@ -45,19 +50,34 @@ const AppRoutes = () => {
           </RoleRoute>
         }
       />
-
-      {/* ✅ Admin Layout - Shared with Admin & Worker */}
       <Route
-        path="/admin"
+        path="/orders"
+        element={
+          <RoleRoute allowedRoles={["user", "admin", "worker"]}>
+            <OrdersPage />
+          </RoleRoute>
+        }
+      />
+      <Route
+        path="/account"
+        element={
+          <RoleRoute allowedRoles={["user", "admin", "worker"]}>
+            <AccountPage />
+          </RoleRoute>
+        }
+      />
+
+      {/* Admin + Worker Shared Layout */}
+      <Route
+        path="/adminDashboard"
         element={
           <RoleRoute allowedRoles={["admin", "worker"]}>
             <AdminSidebarLayout />
           </RoleRoute>
         }
       >
-        {/* ✅ Admin & Worker Access */}
         <Route
-          path="dashboard"
+          path="/adminDashboard"
           element={
             <RoleRoute allowedRoles={["admin", "worker"]}>
               <AdminDashboard />
@@ -81,7 +101,7 @@ const AppRoutes = () => {
           }
         />
 
-        {/* ✅ Admin Only Access */}
+        {/* Admin Only Routes */}
         <Route
           path="orders"
           element={
@@ -98,18 +118,6 @@ const AppRoutes = () => {
             </RoleRoute>
           }
         />
-
-        {/* 🟡 Future: Protect finance routes like this */}
-        {/* 
-        <Route
-          path="finance"
-          element={
-            <RoleRoute allowedRoles={["admin"]}>
-              <FinancePage />
-            </RoleRoute>
-          }
-        />
-        */}
       </Route>
     </Routes>
   );

@@ -5,18 +5,17 @@ import {
   toggleUserStatus,
   deleteUser,
 } from "../../../services/userService";
-import { useAuth } from "@clerk/clerk-react";
 import type { User } from "../../../services/userService";
 
 export default function UserList() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
-  const { getToken } = useAuth();
 
   const fetchUsers = async () => {
     try {
-      const token = await getToken();
-      const data = await fetchUsersWithStats(token || "");
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const data = await fetchUsersWithStats(token);
       setUsers(data);
       setLoading(false);
     } catch (err) {
@@ -32,21 +31,24 @@ export default function UserList() {
     userId: string,
     role: "user" | "worker" | "admin"
   ) => {
-    const token = await getToken();
-    await updateUserRole(userId, role, token || "");
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    await updateUserRole(userId, role, token);
     fetchUsers();
   };
 
   const handleToggleStatus = async (userId: string, isActive: boolean) => {
-    const token = await getToken();
-    await toggleUserStatus(userId, !isActive, token || "");
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    await toggleUserStatus(userId, !isActive, token);
     fetchUsers();
   };
 
   const handleDelete = async (userId: string) => {
     if (confirm("Are you sure you want to delete this user?")) {
-      const token = await getToken();
-      await deleteUser(userId, token || "");
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      await deleteUser(userId, token);
       fetchUsers();
     }
   };

@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { useCart } from "../contexts/CartContext";
 import { FaTrash } from "react-icons/fa";
 import toast from "react-hot-toast";
-import { useUser, useClerk } from "@clerk/clerk-react";
 
 const Cart = () => {
   const {
@@ -14,16 +13,10 @@ const Cart = () => {
     decreaseQuantity,
   } = useCart();
 
-  const { isSignedIn } = useUser();
-  const { redirectToSignIn } = useClerk();
   const navigate = useNavigate();
 
   const handleCheckout = () => {
-    if (!isSignedIn) {
-      redirectToSignIn({ redirectUrl: "/checkout" });
-    } else {
-      navigate("/checkout");
-    }
+    navigate("/checkout");
   };
 
   return (
@@ -48,7 +41,6 @@ const Cart = () => {
                   key={item.product}
                   className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b pb-4 gap-4"
                 >
-                  {/* Left: Image + Info */}
                   <div className="flex items-center gap-4">
                     <img
                       src={item.image}
@@ -56,15 +48,17 @@ const Cart = () => {
                       className="w-16 h-16 object-cover rounded-md"
                     />
                     <div>
-                      <h2 className="font-semibold text-slate-800">{item.name}</h2>
+                      <h2 className="font-semibold text-slate-800">
+                        {item.name}
+                      </h2>
                       <p className="text-sm text-gray-500">
                         ${item.price.toFixed(2)} × {item.quantity}
                       </p>
                     </div>
                   </div>
 
-                  {/* Right: Controls */}
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5 w-full sm:w-auto justify-between">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5
+                   w-full sm:w-auto justify-between">
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => decreaseQuantity(item.product)}
@@ -73,7 +67,9 @@ const Cart = () => {
                       >
                         −
                       </button>
-                      <span className="min-w-[24px] text-center">{item.quantity}</span>
+                      <span className="min-w-[24px] text-center">
+                        {item.quantity}
+                      </span>
                       <button
                         onClick={() => increaseQuantity(item.product)}
                         className="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded"
@@ -101,7 +97,6 @@ const Cart = () => {
               ))}
             </div>
 
-            {/* Total & Checkout */}
             <div className="flex flex-col sm:flex-row justify-between items-center mt-10 gap-4">
               <Link
                 to="/"
@@ -119,7 +114,8 @@ const Cart = () => {
                 </p>
                 <button
                   onClick={handleCheckout}
-                  className="mt-2 bg-purple-700 hover:bg-purple-800 text-white px-5 py-2 rounded-lg transition w-full sm:w-auto"
+                  className="mt-2 bg-purple-700 hover:bg-purple-800 text-white px-5 py-2
+                   rounded-lg transition w-full sm:w-auto"
                 >
                   Proceed to Checkout
                 </button>

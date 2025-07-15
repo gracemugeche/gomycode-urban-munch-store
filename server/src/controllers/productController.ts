@@ -5,7 +5,7 @@ import Product from "../models/productModels";
 export const getAllProducts = async (req: Request, res: Response): Promise<void> => {
   try {
     const products = await Product.find();
-    res.json(products); // ✅ no return
+    res.json(products); 
   } catch (error) {
     res.status(500).json({ message: "Error fetching products" });
   }

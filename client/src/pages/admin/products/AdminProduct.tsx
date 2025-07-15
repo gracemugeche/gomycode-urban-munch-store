@@ -5,7 +5,6 @@ import {
   deleteProduct,
   updateProduct,
 } from "../../../services/ProductService";
-import { useAuth } from "@clerk/clerk-react";
 import type { Product } from "../../../types/product";
 import { Navigate } from "react-router-dom";
 import { useAuth as useCustomAuth } from "../../../hooks/useAuth";
@@ -22,7 +21,6 @@ const AdminProductPage = () => {
   const [editId, setEditId] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
 
-  const { getToken } = useAuth();
   const { role } = useCustomAuth();
 
   if (role !== "admin" && role !== "worker") {
@@ -59,15 +57,15 @@ const AdminProductPage = () => {
       return;
     }
 
-    const token = await getToken();
+    const token = localStorage.getItem("token");
     if (!token) return;
 
     let imageUrl = "";
     if (useFileUpload && image) {
       try {
         imageUrl = await uploadToCloudinary(image);
-      } catch (err:any) {
-        err("Image upload failed");
+      } catch (err: any) {
+        console.error("Image upload failed:", err);
         return;
       }
     } else if (!useFileUpload && imageUrlInput) {
@@ -106,7 +104,7 @@ const AdminProductPage = () => {
   };
 
   const handleDelete = async (id: string) => {
-    const token = await getToken();
+    const token = localStorage.getItem("token");
     if (!token) return;
     await deleteProduct(id, token);
     await loadProducts();
@@ -235,7 +233,8 @@ const AdminProductPage = () => {
           {products.map((p) => (
             <div
               key={p._id}
-              className="border rounded-xl p-4 shadow-sm bg-white flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+              className="border rounded-xl p-4 shadow-sm bg-white flex flex-col md:flex-row md:items-center
+               md:justify-between gap-4"
             >
               <div className="flex items-center gap-4">
                 <img
