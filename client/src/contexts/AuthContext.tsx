@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useContext } from "react";
 import type { ReactNode } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -16,6 +16,7 @@ type User = {
 type AuthContextType = {
   user: User | null;
   role: Role | null;
+  token: string | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   signup: (name: string, email: string, password: string) => Promise<void>;
@@ -25,6 +26,7 @@ type AuthContextType = {
 export const AuthContext = createContext<AuthContextType>({
   user: null,
   role: null,
+  token: null,
   loading: true,
   login: async () => {},
   signup: async () => {},
@@ -36,19 +38,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const [user, setUser] = useState<User | null>(null);
   const [role, setRole] = useState<Role | null>(null);
+  const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    if (storedUser) {
+    const storedToken = localStorage.getItem("token");
+
+    if (storedUser && storedToken) {
       try {
         const parsedUser: User = JSON.parse(storedUser);
         setUser(parsedUser);
         setRole(parsedUser.role);
+        setToken(storedToken);
       } catch {
         localStorage.removeItem("user");
+        localStorage.removeItem("token");
       }
     }
+
     setLoading(false);
   }, []);
 
@@ -70,6 +78,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       setUser(userData);
       setRole(userData.role);
+      setToken(token);
 
       if (userData.role === "admin" || userData.role === "worker") {
         navigate("/adminDashboard");
@@ -99,6 +108,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     setUser(null);
     setRole(null);
+    setToken(null);
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     navigate("/login");
@@ -106,9 +116,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, role, loading, login, signup, logout }}
+      value={{ user, role, token, loading, login, signup, logout }}
     >
       {!loading && children}
     </AuthContext.Provider>
   );
 };
+
+export const useAuth = () => useContext(AuthContext);
