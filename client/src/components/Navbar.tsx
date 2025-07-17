@@ -26,6 +26,11 @@ const NavLinks = ({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+  const user = localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user") as string)
+    : null;
+
+  const dashboardLink = user?.role === "user" ? "/dashboard" : "/adminDashboard";
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -95,7 +100,7 @@ const NavLinks = ({
               }`}
             >
               <NavLink
-                to="/dashboard"
+                to={dashboardLink}
                 onClick={() => {
                   setDropdownOpen(false);
                   onLinkClick?.();
