@@ -1,25 +1,20 @@
+import type { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
-import type { PropsWithChildren } from "react";
+import { useAuth } from "../contexts/AuthContext";
 
-type RoleRouteProps = PropsWithChildren<{
-  allowedRoles: ("admin" | "worker" | "user")[];
-  redirectTo?: string;
-}>;
+interface RoleRouteProps {
+  allowedRoles: string[];
+  children: ReactNode;
+}
 
-const RoleRoute = ({ children, allowedRoles, redirectTo = "/" }: RoleRouteProps) => {
-  const { role, loading } = useAuth();
+const RoleRoute = ({ allowedRoles, children }: RoleRouteProps) => {
+  const { user } = useAuth();
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <p>Loading...</p>
-      </div>
-    );
-  }
+  if (!user) return <Navigate to="/login" />;
 
-  if (!role || !allowedRoles.includes(role)) {
-    return <Navigate to={redirectTo} replace />;
+  if (!allowedRoles.includes(user.role)) {
+    if (user.role === "admin" || user.role === "worker") return <Navigate to="/admin/dashboard" />;
+    return <Navigate to="/" />;
   }
 
   return <>{children}</>;
