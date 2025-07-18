@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { User, LogOut } from "lucide-react";
-import { useAuth } from "../hooks/useAuth";
+import {  LogOut } from "lucide-react";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function AdminNavbarLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
-  const { role, logout } = useAuth(); // ✅ Add logout
+  const { role, logout } = useAuth(); 
 
   const handleLogout = () => {
     logout();
@@ -45,13 +45,6 @@ export default function AdminNavbarLayout() {
             </Link>
           ))}
           <div className="flex items-center gap-4">
-            <Link
-              to="/admin/settings/profile"
-              className="flex items-center gap-1 hover:text-purple-400 transition"
-            >
-              <User className="w-4 h-4" />
-              <span>Profile</span>
-            </Link>
             <button
               onClick={handleLogout}
               className="flex items-center gap-1 hover:text-red-400 transition"
@@ -84,13 +77,6 @@ export default function AdminNavbarLayout() {
               </Link>
             ))}
             <div className="border-t px-6 py-3">
-              <Link
-                to="/admin/settings/profile"
-                onClick={() => setShowMenu(false)}
-                className="block text-sm py-2 hover:text-purple-600"
-              >
-                Profile
-              </Link>
               <button
                 onClick={handleLogout}
                 className="text-left text-sm text-red-600 py-2 hover:text-red-800 w-full"

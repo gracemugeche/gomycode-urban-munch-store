@@ -6,7 +6,7 @@ import { AuthenticatedRequest } from '../middlewares/authMiddleware';
 // Create a new order
 export const createOrder = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
-    const { orderItems, deliveryAddress, paymentMethod, totalPrice } = req.body;
+    const { orderItems, deliveryAddress, paymentMethod, totalPrice, deliveryDate } = req.body;
 
     if (!orderItems || orderItems.length === 0) {
       res.status(400).json({ message: 'No order items provided' });
@@ -18,12 +18,15 @@ export const createOrder = async (req: AuthenticatedRequest, res: Response): Pro
       return;
     }
 
-    // ✅ Prevent disabled users from placing orders
     const user = await User.findById(req.user._id);
     if (!user || !user.isActive) {
       res.status(403).json({ message: 'Your account is disabled. You cannot place orders.' });
       return;
     }
+
+    // Auto mark stripe as paid
+    const isPaid = paymentMethod === 'stripe';
+    const paidAt = isPaid ? new Date() : undefined;
 
     const order = new Order({
       user: req.user._id,
@@ -31,6 +34,9 @@ export const createOrder = async (req: AuthenticatedRequest, res: Response): Pro
       deliveryAddress,
       paymentMethod,
       totalPrice,
+      isPaid,
+      paidAt,
+      deliveryDate: deliveryDate || null,
     });
 
     const createdOrder = await order.save();
@@ -41,12 +47,12 @@ export const createOrder = async (req: AuthenticatedRequest, res: Response): Pro
   }
 };
 
-// Get all orders (admin only)
+//Get all orders (admin only)
 export const getOrders = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     const orders = await Order.find()
       .populate('user', 'name email')
-      .populate('deliveryWorker' , 'name')
+      .populate('deliveryWorker', 'name')
       .sort({ createdAt: -1 });
     res.json(orders);
   } catch (error) {
@@ -55,7 +61,7 @@ export const getOrders = async (req: AuthenticatedRequest, res: Response): Promi
   }
 };
 
-// Get current logged-in user's orders
+//Get current logged-in user's orders
 export const getMyOrders = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     if (!req.user) {
@@ -74,7 +80,9 @@ export const getMyOrders = async (req: AuthenticatedRequest, res: Response): Pro
 // Get a single order by ID
 export const getOrderById = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
-    const order = await Order.findById(req.params.id).populate('user', 'name email');
+    const order = await Order.findById(req.params.id)
+      .populate('user', 'name email')
+      .populate('deliveryWorker', 'name');
 
     if (!order) {
       res.status(404).json({ message: 'Order not found' });
@@ -96,7 +104,7 @@ export const getOrderById = async (req: AuthenticatedRequest, res: Response): Pr
   }
 };
 
-// Update order status (admin only)
+//  Update order status (admin only)
 export const updateOrderStatus = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     const order = await Order.findById(req.params.id);
@@ -106,7 +114,7 @@ export const updateOrderStatus = async (req: AuthenticatedRequest, res: Response
       return;
     }
 
-    const { isPaid, isDelivered } = req.body;
+    const { isPaid, isDelivered, status, deliveryStatus } = req.body;
 
     if (isPaid !== undefined) {
       order.isPaid = isPaid;
@@ -118,6 +126,14 @@ export const updateOrderStatus = async (req: AuthenticatedRequest, res: Response
       if (isDelivered) order.deliveredAt = new Date();
     }
 
+    if (status) {
+      order.status = status;
+    }
+
+    if (deliveryStatus) {
+      order.deliveryStatus = deliveryStatus;
+    }
+
     const updatedOrder = await order.save();
     res.json(updatedOrder);
   } catch (error) {
@@ -125,6 +141,7 @@ export const updateOrderStatus = async (req: AuthenticatedRequest, res: Response
     res.status(500).json({ message: 'Server error while updating order' });
   }
 };
+
 
 // Delete an order (admin only)
 export const deleteOrder = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
@@ -143,3 +160,29 @@ export const deleteOrder = async (req: AuthenticatedRequest, res: Response): Pro
     res.status(500).json({ message: 'Server error while deleting order' });
   }
 };
+// Get finance summary (admin only)
+export const getFinanceSummary = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  try {
+    const orders = await Order.find();
+
+    const totalOrders = orders.length;
+    const totalRevenue = orders
+      .filter((order) => order.isPaid)
+      .reduce((sum, order) => sum + order.totalPrice, 0);
+
+    const paidOrders = orders.filter((order) => order.isPaid).length;
+    const unpaidOrders = orders.filter((order) => !order.isPaid).length;
+
+    res.json({
+      totalOrders,
+      totalRevenue,
+      paidOrders,
+      unpaidOrders,
+    });
+  } catch (error) {
+    console.error('Finance summary error:', error);
+    res.status(500).json({ message: 'Server error while fetching finance summary' });
+  }
+};
+
+

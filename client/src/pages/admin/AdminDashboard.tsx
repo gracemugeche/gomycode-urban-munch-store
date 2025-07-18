@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Package, FileText, Truck, Users, LogOut, Wallet } from "lucide-react";
+import { Package, FileText, Truck, Users,  Wallet } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 
 const AdminDashboard = () => {
@@ -78,7 +78,7 @@ const AdminDashboard = () => {
         ))}
       </div>
 
-      {/* Centered Last Card if odd */}
+      {/* Centered Last Card  */}
       {lastSection && (
         <div className="flex justify-center mb-10">
           <Link
@@ -94,13 +94,7 @@ const AdminDashboard = () => {
         </div>
       )}
 
-      {/* Logout Button (optional to wire with Clerk logout) */}
-      <div className="flex justify-center">
-        <button className="flex items-center gap-2 text-red-600 px-5 py-2 rounded hover:underline">
-          <LogOut className="w-5 h-5" />
-          Logout
-        </button>
-      </div>
+
     </div>
   );
 };

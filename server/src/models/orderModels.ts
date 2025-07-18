@@ -16,7 +16,7 @@ export interface IOrder extends Document {
     city: string;
     phone: string;
   };
-  paymentMethod: "cod" | "stripe" | "mpesa";
+  paymentMethod: "cod" | "stripe";
   totalPrice: number;
   isPaid: boolean;
   paidAt?: Date;
@@ -50,7 +50,7 @@ const orderSchema = new Schema<IOrder>(
     },
     paymentMethod: {
       type: String,
-      enum: ["cod", "stripe", "mpesa"],
+      enum: ["cod", "stripe"],
       default: "cod",
     },
     totalPrice: { type: Number, required: true },
@@ -70,7 +70,7 @@ const orderSchema = new Schema<IOrder>(
       default: "pending",
     },
 
-    // ✅ Delivery assignment
+    //  Delivery assignment
     deliveryWorker: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -81,7 +81,7 @@ const orderSchema = new Schema<IOrder>(
       default: "pending",
     },
 
-    // ✅ Optional delivery notes (already present in your version)
+    // delivery 
     note: {
       type: String,
     },

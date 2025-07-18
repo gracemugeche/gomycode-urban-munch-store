@@ -1,12 +1,12 @@
 import { useLocation } from "react-router-dom";
-import Footer from "./components/Footer";
-import Navbar from "./components/Navbar";
+import Footer from "./components/homesection/Footer";
+import Navbar from "./components/homesection/Navbar";
 import AppRoutes from "./routes/AppRoutes";
 
 export default function App() {
   const location = useLocation();
 
-  // Hide navbar and footer on login/signup pages
+  // Hide navbar and footer on this pages
   const hideLayoutRoutes = [
     "/login",
     "/signup",
@@ -17,6 +17,7 @@ export default function App() {
     "/adminDashboard/users",
     "/adminDashboard",
     "/adminDashboard/delivery",
+    "/adminDashboard/finance",
     "/order-success",
     "/dashboard",
     "/orders",

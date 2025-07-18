@@ -39,12 +39,15 @@ const AdminProductPage = () => {
   const uploadToCloudinary = async (file: File): Promise<string> => {
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", "urban_munch_preset"); // Replace with your actual preset
+    formData.append("upload_preset", "urban_munch_preset"); 
 
-    const res = await fetch("https://api.cloudinary.com/v1_1/dwwuiydrd/image/upload", {
-      method: "POST",
-      body: formData,
-    });
+    const res = await fetch(
+      "https://api.cloudinary.com/v1_1/dwwuiydrd/image/upload",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
 
     const data = await res.json();
     return data.secure_url;
@@ -52,7 +55,12 @@ const AdminProductPage = () => {
 
   const handleSubmit = async () => {
     const parsedPrice = parseFloat(price);
-    if (!name || !description || isNaN(parsedPrice) || (!image && !imageUrlInput)) {
+    if (
+      !name ||
+      !description ||
+      isNaN(parsedPrice) ||
+      (!image && !imageUrlInput)
+    ) {
       alert("Please fill all fields correctly.");
       return;
     }

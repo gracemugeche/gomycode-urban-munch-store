@@ -114,7 +114,8 @@ const NavLinks = ({
                   handleLogout();
                   onLinkClick?.();
                 }}
-                className="block w-full text-left px-4 py-2 rounded-md hover:bg-purple-50 text-sm text-red-600 border-t"
+                className="block w-full text-left px-4 py-2 rounded-md hover:bg-purple-50 text-sm
+                 text-red-600 border-t"
               >
                 Logout
               </button>
@@ -140,7 +141,8 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <nav className="bg-gradient-to-r from-purple-200 via-purple-100 to-purple-50 shadow-md text-purple-800 font-[Poppins]">
+    <nav className="bg-gradient-to-r from-purple-200 via-purple-100 to-purple-50 shadow-md
+     text-purple-800 font-[Poppins]">
       <div className="flex justify-between items-center max-w-7xl mx-auto px-6 py-4">
         <NavLink
           to="/"

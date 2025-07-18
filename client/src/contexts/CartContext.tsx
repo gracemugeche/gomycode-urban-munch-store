@@ -22,13 +22,13 @@ export const useCart = () => {
 };
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
-  // ✅ Load from localStorage on first load
+  // Load from localStorage on first load
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
     const storedCart = localStorage.getItem("cartItems");
     return storedCart ? JSON.parse(storedCart) : [];
   });
 
-  // ✅ Save cart to localStorage on every change
+  //Save cart to localStorage on every change
   useEffect(() => {
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
   }, [cartItems]);

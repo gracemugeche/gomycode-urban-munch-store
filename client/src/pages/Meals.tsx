@@ -55,7 +55,7 @@ const Meal = () => {
         <p className="text-center text-gray-500">No meals found.</p>
       )}
 
-      {/* Extra content */}
+      {/* recipe section */}
       <RecipeSection />
     </div>
   );

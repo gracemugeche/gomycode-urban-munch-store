@@ -14,13 +14,13 @@ import { protect, adminOnly } from "../middlewares/authMiddleware";
 
 const router = express.Router();
 
-// ✅ User self info route
+// User self info route
 router.get("/me", protect, getMe);
 router.patch("/me", protect, updateMe);
 router.get("/my-orders", protect, getMyOrders);
 
 
-// ✅ Admin-only routes
+//  Admin-only routes
 router.get("/", protect, adminOnly, getAllUsers);
 router.get("/stats", protect, adminOnly, getAllUsersWithStats);
 router.patch("/role", protect, adminOnly, updateUserRole);

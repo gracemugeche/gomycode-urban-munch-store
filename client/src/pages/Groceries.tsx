@@ -23,7 +23,7 @@ const Groceries = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 px-6 py-10">
-      {/* 🛒 Title and Intro */}
+      {/* Title and Intro */}
       <div className="text-center mb-10">
         <h1 className="text-3xl font-bold text-[rgb(63,56,70)]">Grocery Essentials</h1>
         <p className="text-gray-600 mt-2">
@@ -31,7 +31,7 @@ const Groceries = () => {
         </p>
       </div>
 
-      {/* 🔍 Search Bar */}
+      {/* Search Bar */}
       <div className="max-w-md mx-auto mb-8">
         <input
           type="text"
@@ -42,7 +42,7 @@ const Groceries = () => {
         />
       </div>
 
-      {/* 🧺 Product Grid */}
+      {/*  Product Grid */}
       {filteredGroceries.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {filteredGroceries.map((item) => (
