@@ -57,7 +57,11 @@ export default function UserList() {
   const workerList = users.filter((u) => u.role === "worker");
 
   if (loading)
-    return <p className="text-center mt-10 text-purple-700 font-semibold">Loading users...</p>;
+    return (
+      <p className="text-center mt-10 text-purple-700 font-semibold">
+        Loading users...
+      </p>
+    );
 
   const renderUserCard = (user: User, promoteTo: "worker" | "admin") => (
     <div

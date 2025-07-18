@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { FaClipboardList, FaUserCircle } from "react-icons/fa";
 
 interface UserResponse {
-  name?: string; // Your MongoDB only stores 'name'
+  name?: string; 
   email: string;
   avatar?: string;
 }

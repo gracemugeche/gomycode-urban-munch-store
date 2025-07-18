@@ -15,7 +15,7 @@ export interface IOrder {
     city: string;
     phone: string;
   };
-  paymentMethod: 'Cash on Delivery' | 'Stripe'| 'm-pesa';
+  paymentMethod: 'Cash on Delivery' | 'Stripe' ;
   totalPrice: number;
   isPaid: boolean;
   paidAt?: Date;

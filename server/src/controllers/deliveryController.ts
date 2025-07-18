@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import Order from "../models/orderModels";
 import User from "../models/userModels";
 
-// ✅ Assign a delivery worker to an order
+// Assign a delivery worker to an order
 export const assignDeliveryWorker = async (req: Request, res: Response): Promise<void> => {
   try {
     const { orderId, workerId } = req.body;
@@ -26,7 +26,7 @@ export const assignDeliveryWorker = async (req: Request, res: Response): Promise
   }
 };
 
-// ✅ Update delivery status
+// Update delivery status
 export const updateDeliveryStatus = async (req: Request, res: Response): Promise<void> => {
   try {
     const { orderId } = req.params;
@@ -53,11 +53,11 @@ export const updateDeliveryStatus = async (req: Request, res: Response): Promise
   }
 };
 
-// ✅ Get deliveries assigned to logged-in worker
+// Get deliveries assigned to logged-in worker
 export const getMyDeliveries = async (req: Request, res: Response): Promise<void> => {
   try {
 
-    // console.log("🔍 Worker requesting deliveries:", req.user?._id);
+    // console.log(" Worker requesting deliveries:", req.user?._id);
 
     const userId = req.user._id;
     const user = await User.findById(userId);

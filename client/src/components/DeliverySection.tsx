@@ -5,15 +5,16 @@ interface Props {
     street: string;
     phone: string;
     city: string;
+    deliveryDate?: string;
   };
   setDeliveryAddress: React.Dispatch<
     React.SetStateAction<{
       street: string;
       phone: string;
       city: string;
+      deliveryDate?: string;
     }>
   >;
-  deliveryFee: number;
 }
 
 const countryOptions = [
@@ -22,7 +23,7 @@ const countryOptions = [
   { code: "GB", name: "United Kingdom", dial: "+44", maxLength: 12 },
 ];
 
-const DeliverySection = ({ deliveryAddress, setDeliveryAddress, deliveryFee }: Props) => {
+const DeliverySection = ({ deliveryAddress, setDeliveryAddress }: Props) => {
   const [deliveryOption, setDeliveryOption] = useState("asap");
   const [customDate, setCustomDate] = useState("");
   const [countryCode, setCountryCode] = useState("KE");
@@ -35,13 +36,17 @@ const DeliverySection = ({ deliveryAddress, setDeliveryAddress, deliveryFee }: P
         ...prev,
         deliveryDate: customDate,
       }));
+    } else {
+      setDeliveryAddress((prev) => ({
+        ...prev,
+        deliveryDate: "",
+      }));
     }
-  }, [customDate, deliveryOption]);
+  }, [customDate, deliveryOption, setDeliveryAddress]);
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, ""); 
+    const value = e.target.value.replace(/\D/g, "");
     const total = selectedCountry.dial.length + value.length;
-
     if (total <= selectedCountry.maxLength) {
       setDeliveryAddress((prev) => ({
         ...prev,
@@ -53,6 +58,8 @@ const DeliverySection = ({ deliveryAddress, setDeliveryAddress, deliveryFee }: P
   const getRawNumber = () => {
     return deliveryAddress.phone.replace(selectedCountry.dial, "");
   };
+
+  const todayDate = new Date().toISOString().split("T")[0];
 
   return (
     <div className="space-y-4">
@@ -141,14 +148,10 @@ const DeliverySection = ({ deliveryAddress, setDeliveryAddress, deliveryFee }: P
             type="date"
             value={customDate}
             onChange={(e) => setCustomDate(e.target.value)}
+            min={todayDate} 
             className="w-full p-2 border rounded-md"
           />
         )}
-      </div>
-
-      {/* Delivery Fee */}
-      <div className="text-purple-700 font-medium mt-4">
-        Delivery Fee: ${deliveryFee.toFixed(2)}
       </div>
     </div>
   );

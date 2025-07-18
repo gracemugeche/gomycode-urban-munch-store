@@ -5,7 +5,6 @@ import {
   FaUserFriends,
   FaCcStripe,
   FaMoneyBillWave,
-  FaMobileAlt,
   FaQuestionCircle,
 } from "react-icons/fa";
 import { FiMapPin } from "react-icons/fi";
@@ -70,11 +69,10 @@ const Help = () => {
           <FaLock size={28} className="mx-auto text-purple-600 mb-3" />
           <h4 className="font-bold mb-2">Payment Methods</h4>
           <div className="flex justify-center gap-6 text-2xl text-purple-700 mb-2">
-            <FaMobileAlt title="M-Pesa" />
             <FaCcStripe title="Stripe" />
             <FaMoneyBillWave title="Cash" />
           </div>
-          <p>We accept M-Pesa, Stripe, and Cash on Delivery.</p>
+          <p>We accept Stripe, and Cash on Delivery.</p>
         </div>
 
         <div className="bg-gray-50 p-6 rounded-lg shadow-sm">

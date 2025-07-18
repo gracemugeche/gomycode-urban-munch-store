@@ -8,8 +8,8 @@ const generateToken = (id: string) => {
   return jwt.sign({ id }, process.env.JWT_SECRET!, { expiresIn: "30d" });
 };
 
-// @desc Register new user
-// @route POST /api/auth/register
+//  Register new user
+//  POST /api/auth/register
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
   const { name, email, password } = req.body;
 
@@ -43,12 +43,10 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
   });
 };
 
-// ✅ @desc Login user (fixed)
-// @route POST /api/auth/login
+//  POST /api/auth/login
 export const loginUser = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
 
-  // Explicitly include password field
   const user = await User.findOne({ email }).select("+password");
 
   if (!user || !user.password) {
@@ -63,8 +61,6 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
   }
 
   const token = generateToken(user.id);
-
-  // ✅ Send user inside { user: {} } as your frontend expects
   res.status(200).json({
     token,
     user: {
@@ -76,8 +72,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
   });
 };
 
-// @desc Get current logged in user
-// @route GET /api/auth/me
+//  GET /api/auth/me
 export const getMe = async (req: any, res: Response): Promise<void> => {
   const user = await User.findById(req.user.id).select("-password");
   res.status(200).json(user);

@@ -15,7 +15,7 @@ export interface DeliveryOrder {
     price: number;
     image: string;
   }[];
-  deliveryStatus: "pending" | "in_progress" | "delivered" | "cancelled";
+  deliveryStatus: "pending" | "in_progress" | "delivered" | "failed";
   note?: string;
 }
 
@@ -28,13 +28,12 @@ export const getMyDeliveries = async (token: string) => {
 
 export const updateDeliveryStatus = async (
   orderId: string,
-  status: string,
-  note: string,
+  deliveryStatus: "pending" | "in_progress" | "delivered" | "failed",
   token: string
 ) => {
   const res = await axios.put(
-    `${API_URL}/status/${orderId}`,
-    { status, note },
+    `${API_URL}/${orderId}/status`,  
+    { status: deliveryStatus },      
     {
       headers: { Authorization: `Bearer ${token}` },
     }

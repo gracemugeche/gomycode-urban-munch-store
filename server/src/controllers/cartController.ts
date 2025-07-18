@@ -11,7 +11,7 @@ export const getCart = async (
   try {
     let cart = await Cart.findOne({ user: req.user._id });
 
-    // ✅ Create empty cart if not found
+    // Create empty cart
     if (!cart) {
       cart = new Cart({ user: req.user._id, items: [] });
       await cart.save();

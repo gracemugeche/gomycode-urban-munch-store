@@ -26,7 +26,7 @@ export const createProduct = async (
   return response.data;
 };
 
-// ✅ DELETE product
+// DELETE product
 export const deleteProduct = async (
   id: string,
   token: string
@@ -37,7 +37,7 @@ export const deleteProduct = async (
   return response.data;
 };
 
-// ✅ UPDATE product
+// UPDATE product
 export const updateProduct = async (
   id: string,
   data: Partial<Product>,

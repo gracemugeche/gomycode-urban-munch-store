@@ -14,7 +14,6 @@ export default function DeliveryPage() {
       const token = localStorage.getItem("token");
       if (!token) return;
       const data = await getMyDeliveries(token);
-      console.log("📦 Deliveries fetched:", data);
       setOrders(data);
     } catch (err) {
       console.error("Failed to load deliveries", err);
@@ -23,9 +22,12 @@ export default function DeliveryPage() {
     }
   };
 
-  const handleStatusUpdate = async (orderId: string, newStatus: string) => {
+  const handleStatusUpdate = async (
+    orderId: string,
+    deliveryStatus: "pending" | "in_progress" | "delivered" | "failed"
+  ) => {
     const token = localStorage.getItem("token");
-    await updateDeliveryStatus(orderId, newStatus, "", token || "");
+    await updateDeliveryStatus(orderId, deliveryStatus, token || "");
     fetchDeliveries();
   };
 
@@ -50,7 +52,8 @@ export default function DeliveryPage() {
         {orders.map((order) => (
           <div
             key={order._id}
-            className="bg-white shadow-md rounded-xl p-4 border border-gray-100 flex flex-col justify-between"
+            className="bg-white shadow-md rounded-xl p-4 border border-gray-100 flex 
+            flex-col justify-between"
           >
             <div>
               <h2 className="font-semibold text-lg mb-2 text-gray-800">
@@ -116,7 +119,7 @@ export default function DeliveryPage() {
                 Mark Delivered
               </button>
               <button
-                onClick={() => handleStatusUpdate(order._id, "cancelled")}
+                onClick={() => handleStatusUpdate(order._id, "failed")}
                 className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600 text-sm"
               >
                 Cancel
